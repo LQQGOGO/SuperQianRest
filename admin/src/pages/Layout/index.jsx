@@ -29,7 +29,7 @@ import {
   BulbOutlined,
 } from "@ant-design/icons";
 import avatar from "@/assets/logo.png";
-import { Button, Layout, Menu, theme, Dropdown, Space } from "antd";
+import { Button, Layout, Menu, theme, Dropdown, Space, Tabs } from "antd";
 import "./index.scss";
 
 const { Header, Sider, Content } = Layout;
@@ -175,25 +175,97 @@ const MessageDropdownItems = [
 // 用户下拉菜单
 const UserDropdownItems = [
   {
-    label: (<Button type="text" icon={<UserOutlined />}>个人中心</Button>),
+    label: (
+      <Button type="text" icon={<UserOutlined />}>
+        个人中心
+      </Button>
+    ),
     key: "0",
   },
   {
-    label: (<Button type="text" icon={<EditOutlined />}>修改密码</Button>),
+    label: (
+      <Button type="text" icon={<EditOutlined />}>
+        修改密码
+      </Button>
+    ),
     key: "1",
   },
   {
-    label: (<Button type="text" icon={<LogoutOutlined />}>退出登录</Button>),
+    label: (
+      <Button type="text" icon={<LogoutOutlined />}>
+        退出登录
+      </Button>
+    ),
     key: "2",
   },
 ];
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(true);
+  const [tabs, setTabs] = useState([{ key: "1-1", label: "工作台" , closable: false}]);
+  const [activeKey, setActiveKey] = useState(tabs[0].key);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  // 根据 key 找到对应的 label
+  const findLabelByKey = (key, menuList) => {
+    for (const item of menuList) {
+      if (item.key === key) {
+        return item.label;
+      }
+      if (item.children) {
+        const foundLabel = findLabelByKey(key, item.children);
+        if (foundLabel) {
+          return foundLabel;
+        }
+      }
+    }
+    return null; // 如果未找到，返回 null
+  };
+
+  // 点击菜单项
+  const handleMenuClick = (e) => {
+    const key = e.key;
+    const label = findLabelByKey(key, menuList);
+    setTabs((prevTabs) => {
+      // 检查 key 是否已存在，避免重复添加
+      if (prevTabs.some((tab) => tab.key === key)) {
+        return prevTabs; // 如果已存在，则不添加
+      }
+      return [...prevTabs, { key, label }];
+    });
+    setCollapsed(true);
+  };
+
+  // 编辑页签
+  const onChange = (newActiveKey) => {
+    setActiveKey(newActiveKey);
+  };
+
+  const remove = (targetKey) => {
+    let newActiveKey = activeKey;
+    let lastIndex = -1;
+    tabs.forEach((item, i) => {
+      if (item.key === targetKey) {
+        lastIndex = i - 1;
+      }
+    });
+    const newPanes = tabs.filter((item) => item.key !== targetKey);
+    if (newPanes.length && newActiveKey === targetKey) {
+      if (lastIndex >= 0) {
+        newActiveKey = newPanes[lastIndex].key;
+      } else {
+        newActiveKey = newPanes[0].key;
+      }
+    }
+    setTabs(newPanes);
+    setActiveKey(newActiveKey);
+  };
+
+  const onEdit = (targetKey) => {
+    remove(targetKey);
+  };
   return (
     <Layout className="admin-layout">
       {/* 侧边栏导航栏 */}
@@ -211,6 +283,7 @@ const AdminLayout = () => {
           mode="inline"
           defaultSelectedKeys={["1"]}
           items={menuList}
+          onClick={handleMenuClick}
         />
       </Sider>
 
@@ -250,7 +323,6 @@ const AdminLayout = () => {
               }}
             />
           </div>
-
           {/* 用户信息 */}
           <div className="header-right">
             {/* 消息通知 */}
@@ -291,6 +363,19 @@ const AdminLayout = () => {
             </Dropdown>
           </div>
         </Header>
+
+        {/* 页签导航 */}
+        <div className="admin-layout-tabs">
+          <Tabs
+            type="editable-card"
+            hideAdd={true}
+            onChange={onChange}
+            activeKey={activeKey}
+            onEdit={onEdit}
+            items={tabs}
+          />
+        </div>
+
         <Content
           className="admin-layout-content"
           style={{
