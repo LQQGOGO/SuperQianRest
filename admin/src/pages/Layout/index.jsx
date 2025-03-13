@@ -43,17 +43,17 @@ const menuList = [
     label: "Dashboard",
     children: [
       {
-        key: "1-1",
+        key: "/dashboard/workbench",
         icon: <DesktopOutlined />,
         label: "工作台",
       },
       {
-        key: "1-2",
+        key: "/dashboard/analysis",
         icon: <LineChartOutlined />,
         label: "分析页",
       },
       {
-        key: "1-3",
+        key: "/dashboard/monitor",
         icon: <DashboardOutlined />,
         label: "监控页",
       },
@@ -65,12 +65,12 @@ const menuList = [
     label: "菜单管理",
     children: [
       {
-        key: "2-1",
+        key: "/menu/menu-list",
         icon: <BookOutlined />,
         label: "菜单列表",
       },
       {
-        key: "2-2",
+        key: "/menu/add-menu",
         icon: <PlusOutlined />,
         label: "添加菜品",
       },
@@ -82,12 +82,12 @@ const menuList = [
     label: "订单管理",
     children: [
       {
-        key: "3-1",
+        key: "/order/order-list",
         icon: <ExpandAltOutlined />,
         label: "订单列表",
       },
       {
-        key: "3-2",
+        key: "/order/order-stats",
         icon: <PieChartOutlined />,
         label: "订单统计",
       },
@@ -99,7 +99,7 @@ const menuList = [
     label: "用户管理",
     children: [
       {
-        key: "4-1",
+        key: "/user/user-list",
         icon: <MergeOutlined />,
         label: "用户列表",
       },
@@ -111,12 +111,12 @@ const menuList = [
     label: "统计与报表",
     children: [
       {
-        key: "5-1",
+        key: "/report/sales-data",
         icon: <BarChartOutlined />,
         label: "销售数据",
       },
       {
-        key: "5-2",
+        key: "/report/user-analysis",
         icon: <ControlOutlined />,
         label: "用户分析",
       },
@@ -128,12 +128,12 @@ const menuList = [
     label: "个人中心",
     children: [
       {
-        key: "6-1",
+        key: "/personal/profile",
         icon: <IdcardOutlined />,
         label: "我的资料",
       },
       {
-        key: "6-2",
+        key: "/personal/messages",
         icon: <BellOutlined />,
         label: "消息通知",
       },
@@ -145,7 +145,7 @@ const menuList = [
     label: "店铺设置",
     children: [
       {
-        key: "7-1",
+        key: "/setting/basic-info",
         icon: <InboxOutlined />,
         label: "基本信息",
       },
@@ -203,7 +203,7 @@ const UserDropdownItems = [
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const [tabs, setTabs] = useState([{ key: "1-1", label: "工作台" , closable: false}]);
+  const [tabs, setTabs] = useState([{ key: "/dashboard/workbench", label: "工作台" , closable: false}]);
   const [activeKey, setActiveKey] = useState(tabs[0].key);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -238,11 +238,13 @@ const AdminLayout = () => {
       return [...prevTabs, { key, label }];
     });
     setCollapsed(true);
+    setActiveKey(key);
     navigate(key);
   };
 
   // 编辑页签
   const onChange = (newActiveKey) => {
+    navigate(newActiveKey);
     setActiveKey(newActiveKey);
   };
 

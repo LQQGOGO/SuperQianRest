@@ -1,11 +1,11 @@
 import { Outlet } from "react-router-dom";
 
-const Menu = () => {
+const Report = () => {
   return (
-    <div className="menu-container">
+    <div className="report-container">
       <Outlet />
     </div>
   );
 };
 
-export default Menu;
+export default Report; 
