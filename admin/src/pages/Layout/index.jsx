@@ -31,13 +31,14 @@ import {
 import avatar from "@/assets/logo.png";
 import { Button, Layout, Menu, theme, Dropdown, Space, Tabs } from "antd";
 import "./index.scss";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
 
 // 菜单列表
 const menuList = [
   {
-    key: "1",
+    key: "/dashboard",
     icon: <HomeOutlined />,
     label: "Dashboard",
     children: [
@@ -59,7 +60,7 @@ const menuList = [
     ],
   },
   {
-    key: "2",
+    key: "/menu",
     icon: <BuildOutlined />,
     label: "菜单管理",
     children: [
@@ -76,7 +77,7 @@ const menuList = [
     ],
   },
   {
-    key: "3",
+    key: "/order",
     icon: <CarryOutOutlined />,
     label: "订单管理",
     children: [
@@ -93,7 +94,7 @@ const menuList = [
     ],
   },
   {
-    key: "4",
+    key: "/user",
     icon: <UserOutlined />,
     label: "用户管理",
     children: [
@@ -105,7 +106,7 @@ const menuList = [
     ],
   },
   {
-    key: "5",
+    key: "/report",
     icon: <NodeIndexOutlined />,
     label: "统计与报表",
     children: [
@@ -122,7 +123,7 @@ const menuList = [
     ],
   },
   {
-    key: "6",
+    key: "/personal",
     icon: <MehOutlined />,
     label: "个人中心",
     children: [
@@ -139,7 +140,7 @@ const menuList = [
     ],
   },
   {
-    key: "7",
+    key: "/setting",
     icon: <GatewayOutlined />,
     label: "店铺设置",
     children: [
@@ -207,6 +208,7 @@ const AdminLayout = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+  const navigate = useNavigate();
 
   // 根据 key 找到对应的 label
   const findLabelByKey = (key, menuList) => {
@@ -236,6 +238,7 @@ const AdminLayout = () => {
       return [...prevTabs, { key, label }];
     });
     setCollapsed(true);
+    navigate(key);
   };
 
   // 编辑页签
@@ -281,7 +284,7 @@ const AdminLayout = () => {
           className="admin-layout-menu"
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={["1"]}
+          defaultSelectedKeys={["/dashboard"]}
           items={menuList}
           onClick={handleMenuClick}
         />
@@ -386,7 +389,7 @@ const AdminLayout = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          Content
+          <Outlet />
         </Content>
       </Layout>
     </Layout>
