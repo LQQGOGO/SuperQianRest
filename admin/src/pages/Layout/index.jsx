@@ -22,10 +22,14 @@ import {
   InboxOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  ReloadOutlined
+  ReloadOutlined,
+  DownOutlined,
+  EditOutlined,
+  LogoutOutlined,
+  BulbOutlined,
 } from "@ant-design/icons";
-import avatar from "@/assets/logo.png"
-import { Button, Layout, Menu, theme } from "antd";
+import avatar from "@/assets/logo.png";
+import { Button, Layout, Menu, theme, Dropdown, Space } from "antd";
 import "./index.scss";
 
 const { Header, Sider, Content } = Layout;
@@ -148,8 +152,44 @@ const menuList = [
   },
 ];
 
+// 消息通知下拉菜单
+const MessageDropdownItems = [
+  {
+    label: (
+      <Button type="text" icon={<BellOutlined />}>
+        消息通知
+      </Button>
+    ),
+    key: "0",
+  },
+  {
+    label: (
+      <Button type="text" icon={<BulbOutlined />}>
+        系统消息
+      </Button>
+    ),
+    key: "1",
+  },
+];
+
+// 用户下拉菜单
+const UserDropdownItems = [
+  {
+    label: (<Button type="text" icon={<UserOutlined />}>个人中心</Button>),
+    key: "0",
+  },
+  {
+    label: (<Button type="text" icon={<EditOutlined />}>修改密码</Button>),
+    key: "1",
+  },
+  {
+    label: (<Button type="text" icon={<LogoutOutlined />}>退出登录</Button>),
+    key: "2",
+  },
+];
+
 const AdminLayout = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -194,8 +234,8 @@ const AdminLayout = () => {
               onClick={() => setCollapsed(!collapsed)}
               style={{
                 fontSize: "16px",
-                width: 64,
-                height: 64,
+                width: 40,
+                height: 40,
               }}
             />
 
@@ -205,19 +245,50 @@ const AdminLayout = () => {
               icon={<ReloadOutlined />}
               style={{
                 fontSize: "16px",
-                width: 64,
-                height: 64,
+                width: 40,
+                height: 40,
               }}
             />
           </div>
 
           {/* 用户信息 */}
           <div className="header-right">
-            <div className="headeravatar">
-              <span>
-                <img src={avatar} alt="avatar" className="avatar-img" />
-              </span>
-            </div>
+            {/* 消息通知 */}
+            <Dropdown
+              menu={{
+                items: MessageDropdownItems,
+              }}
+              placement="bottom"
+            >
+              <Button
+                type="text"
+                icon={<BellOutlined />}
+                style={{
+                  fontSize: "16px",
+                  width: 40,
+                  height: 40,
+                }}
+              />
+            </Dropdown>
+
+            {/* 头像 */}
+            <Dropdown
+              menu={{
+                items: UserDropdownItems,
+              }}
+              placement="bottomLeft"
+            >
+              <Space>
+                <div className="headeravatar">
+                  <span className="el-avatar">
+                    <img src={avatar} alt="avatar" className="avatar-img" />
+                  </span>
+                  <span className="el-icon">
+                    <DownOutlined />
+                  </span>
+                </div>
+              </Space>
+            </Dropdown>
           </div>
         </Header>
         <Content
