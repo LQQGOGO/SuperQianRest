@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   HomeOutlined,
   DesktopOutlined,
@@ -29,7 +29,7 @@ import {
   BulbOutlined,
 } from "@ant-design/icons";
 import avatar from "@/assets/logo.png";
-import { Button, Layout, Menu, theme, Dropdown, Space, Tabs } from "antd";
+import { Button, Layout, Menu, theme, Dropdown, Space, Tabs, Avatar } from "antd";
 import "./index.scss";
 import { Outlet, useNavigate } from "react-router-dom";
 
@@ -203,8 +203,26 @@ const UserDropdownItems = [
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(true);
-  const [tabs, setTabs] = useState([{ key: "/dashboard/workbench", label: "工作台" , closable: false}]);
-  const [activeKey, setActiveKey] = useState(tabs[0].key);
+
+  // 从 localStorage 读取数据
+  const storedTabs = JSON.parse(sessionStorage.getItem("tabs")) || [
+    { key: "/dashboard/workbench", label: "工作台", closable: false },
+  ];
+  const storedActiveKey =
+    sessionStorage.getItem("activeKey") || storedTabs[0].key;
+
+  const [tabs, setTabs] = useState(storedTabs);
+  const [activeKey, setActiveKey] = useState(storedActiveKey);
+
+  // 将 tabs 和 activeKey 存储到 sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem("tabs", JSON.stringify(tabs));
+  }, [tabs]);
+
+  useEffect(() => {
+    sessionStorage.setItem("activeKey", activeKey);
+  }, [activeKey]);
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -358,7 +376,7 @@ const AdminLayout = () => {
               <Space>
                 <div className="headeravatar">
                   <span className="el-avatar">
-                    <img src={avatar} alt="avatar" className="avatar-img" />
+                    <Avatar src={avatar} />
                   </span>
                   <span className="el-icon">
                     <DownOutlined />
