@@ -388,7 +388,7 @@ const AdminLayout = () => {
         </Header>
 
         {/* 页签导航 */}
-        <div className="admin-layout-tabs">
+        
           <Tabs
             type="editable-card"
             hideAdd={true}
@@ -396,16 +396,16 @@ const AdminLayout = () => {
             activeKey={activeKey}
             onEdit={onEdit}
             items={tabs}
+            className="admin-layout-tabs"
           />
-        </div>
+        
 
         <Content
           className="admin-layout-content"
           style={{
-            margin: "24px 16px",
-            padding: 24,
+            padding: 20,
             minHeight: 280,
-            background: colorBgContainer,
+            background: "#f0f2f5",
             borderRadius: borderRadiusLG,
           }}
         >
