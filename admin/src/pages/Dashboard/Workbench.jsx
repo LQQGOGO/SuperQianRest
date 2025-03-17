@@ -19,36 +19,11 @@ import "./Workbench.scss";
 const Workbench = () => {
   const navigate = useNavigate();
 
-  // // 从 localStorage 读取数据
-  // const storedTabs = JSON.parse(sessionStorage.getItem("tabs")) || [
-  //   { key: "/dashboard/workbench", label: "工作台", closable: false },
-  // ];
-  // const storedActiveKey =
-  //   sessionStorage.getItem("activeKey") || storedTabs[0].key;
-
-  // const [tabs, setTabs] = useState(storedTabs);
-  // const [activeKey, setActiveKey] = useState(storedActiveKey);
-
-  // // 将 tabs 和 activeKey 存储到 sessionStorage
-  // useEffect(() => {
-  //   sessionStorage.setItem("tabs", JSON.stringify(tabs));
-  // }, [tabs]);
-
-  // useEffect(() => {
-  //   sessionStorage.setItem("activeKey", activeKey);
-  // }, [activeKey]);
-
+  // 简化后的 handleCardClick 函数，只负责路由跳转
   const handleCardClick = (key) => {
-    // setActiveKey(key);
-    // setTabs((prevTabs) => {
-    //   // 检查 key 是否已存在，避免重复添加
-    //   if (prevTabs.some((tab) => tab.key === key)) {
-    //     return prevTabs; // 如果已存在，则不添加
-    //   }
-    //   return [...prevTabs, { key, label }];
-    // });
     navigate(key);
   };
+
   return (
     <div className="workbench-container">
       {/* 工作台顶部用户信息 */}
@@ -128,7 +103,7 @@ const Workbench = () => {
             <Card
               className="nav-card-item"
               hoverable={true}
-              onClick={() => handleCardClick("/user")}
+              onClick={() => handleCardClick("/user/user-list")}
             >
               <p>
                 <Icon
@@ -143,7 +118,7 @@ const Workbench = () => {
             <Card
               className="nav-card-item"
               hoverable={true}
-              onClick={() => handleCardClick("/menu")}
+              onClick={() => handleCardClick("/menu/menu-list")}
             >
               <p>
                 <BookOutlined style={{ fontSize: 25, color: "#95de64" }} />
@@ -157,7 +132,7 @@ const Workbench = () => {
             <Card
               className="nav-card-item"
               hoverable={true}
-              onClick={() => handleCardClick("/order")}
+              onClick={() => handleCardClick("/order/order-list")}
             >
               <p>
                 <CarryOutOutlined style={{ fontSize: 25, color: "#ff9c6e" }} />
@@ -169,7 +144,7 @@ const Workbench = () => {
             <Card
               className="nav-card-item"
               hoverable={true}
-              onClick={() => handleCardClick("/report")}
+              onClick={() => handleCardClick("/report/sales-data")}
             >
               <p>
                 <BarChartOutlined style={{ fontSize: 25, color: "#b37feb" }} />
@@ -195,7 +170,7 @@ const Workbench = () => {
             <Card
               className="nav-card-item"
               hoverable={true}
-              onClick={() => handleCardClick("/setting")}
+              onClick={() => handleCardClick("/setting/basic-info")}
             >
               <p>
                 <InboxOutlined style={{ fontSize: 25, color: "#5cdbd3" }} />

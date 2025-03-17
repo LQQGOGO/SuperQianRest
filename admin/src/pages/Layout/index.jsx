@@ -29,9 +29,18 @@ import {
   BulbOutlined,
 } from "@ant-design/icons";
 import avatar from "@/assets/logo.png";
-import { Button, Layout, Menu, theme, Dropdown, Space, Tabs, Avatar } from "antd";
+import {
+  Button,
+  Layout,
+  Menu,
+  theme,
+  Dropdown,
+  Space,
+  Tabs,
+  Avatar,
+} from "antd";
 import "./index.scss";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
 
@@ -142,12 +151,12 @@ const menuList = [
   {
     key: "/setting",
     icon: <GatewayOutlined />,
-    label: "店铺设置",
+    label: "系统设置",
     children: [
       {
         key: "/setting/basic-info",
         icon: <InboxOutlined />,
-        label: "店铺信息",
+        label: "基本信息",
       },
     ],
   },
@@ -156,53 +165,41 @@ const menuList = [
 // 消息通知下拉菜单
 const MessageDropdownItems = [
   {
-    label: (
-      <Button type="text" icon={<BellOutlined />}>
-        消息通知
-      </Button>
-    ),
-    key: "0",
+    key: "1",
+    label: "通知（0）",
   },
   {
-    label: (
-      <Button type="text" icon={<BulbOutlined />}>
-        系统消息
-      </Button>
-    ),
-    key: "1",
+    key: "2",
+    label: "消息（0）",
+  },
+  {
+    key: "3",
+    label: "代办（0）",
   },
 ];
 
 // 用户下拉菜单
 const UserDropdownItems = [
   {
-    label: (
-      <Button type="text" icon={<UserOutlined />}>
-        个人中心
-      </Button>
-    ),
-    key: "0",
-  },
-  {
-    label: (
-      <Button type="text" icon={<EditOutlined />}>
-        修改密码
-      </Button>
-    ),
     key: "1",
+    label: "个人中心",
+    icon: <EditOutlined />,
   },
   {
-    label: (
-      <Button type="text" icon={<LogoutOutlined />}>
-        退出登录
-      </Button>
-    ),
     key: "2",
+    label: "退出登录",
+    icon: <LogoutOutlined />,
+  },
+  {
+    key: "3",
+    label: "切换主题",
+    icon: <BulbOutlined />,
   },
 ];
 
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(true);
+  const location = useLocation();
 
   // 从 localStorage 读取数据
   const storedTabs = JSON.parse(sessionStorage.getItem("tabs")) || [
@@ -213,15 +210,6 @@ const AdminLayout = () => {
 
   const [tabs, setTabs] = useState(storedTabs);
   const [activeKey, setActiveKey] = useState(storedActiveKey);
-
-  // 将 tabs 和 activeKey 存储到 sessionStorage
-  useEffect(() => {
-    sessionStorage.setItem("tabs", JSON.stringify(tabs));
-  }, [tabs]);
-
-  useEffect(() => {
-    sessionStorage.setItem("activeKey", activeKey);
-  }, [activeKey]);
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -244,26 +232,43 @@ const AdminLayout = () => {
     return null; // 如果未找到，返回 null
   };
 
+  // 监听路由变化，自动更新 tabs
+  useEffect(() => {
+    const currentPath = location.pathname;
+
+    // 如果当前路径不在 tabs 中，则添加
+    if (!tabs.some((tab) => tab.key === currentPath)) {
+      const label = findLabelByKey(currentPath, menuList);
+      if (label) {
+        const newTab = { key: currentPath, label, closable: true };
+        setTabs((prevTabs) => [...prevTabs, newTab]);
+      }
+    }
+
+    // 更新当前活动的 tab
+    setActiveKey(currentPath);
+
+    // 将 tabs 和 activeKey 存储到 sessionStorage
+    sessionStorage.setItem("activeKey", currentPath);
+  }, [location.pathname]);
+
+  // 将 tabs 存储到 sessionStorage
+  useEffect(() => {
+    sessionStorage.setItem("tabs", JSON.stringify(tabs));
+  }, [tabs]);
+
   // 点击菜单项
   const handleMenuClick = (e) => {
     const key = e.key;
-    const label = findLabelByKey(key, menuList);
-    setTabs((prevTabs) => {
-      // 检查 key 是否已存在，避免重复添加
-      if (prevTabs.some((tab) => tab.key === key)) {
-        return prevTabs; // 如果已存在，则不添加
-      }
-      return [...prevTabs, { key, label }];
-    });
     setCollapsed(true);
-    setActiveKey(key);
     navigate(key);
+    // 不需要在这里更新 tabs，因为路由变化会触发 useEffect
   };
 
   // 编辑页签
-  const onChange = (newActiveKey) => {
+  const onTabClick = (newActiveKey) => {
     navigate(newActiveKey);
-    setActiveKey(newActiveKey);
+    // 不需要在这里设置 activeKey，因为路由变化会触发 useEffect
   };
 
   const remove = (targetKey) => {
@@ -283,12 +288,14 @@ const AdminLayout = () => {
       }
     }
     setTabs(newPanes);
-    setActiveKey(newActiveKey);
+    navigate(newActiveKey);
+    // 不需要在这里设置 activeKey，因为路由变化会触发 useEffect
   };
 
   const onEdit = (targetKey) => {
     remove(targetKey);
   };
+
   return (
     <Layout className="admin-layout">
       {/* 侧边栏导航栏 */}
@@ -388,17 +395,15 @@ const AdminLayout = () => {
         </Header>
 
         {/* 页签导航 */}
-        
-          <Tabs
-            type="editable-card"
-            hideAdd={true}
-            onChange={onChange}
-            activeKey={activeKey}
-            onEdit={onEdit}
-            items={tabs}
-            className="admin-layout-tabs"
-          />
-        
+        <Tabs
+          type="editable-card"
+          hideAdd={true}
+          onTabClick={onTabClick}
+          activeKey={activeKey}
+          onEdit={onEdit}
+          items={tabs}
+          className="admin-layout-tabs"
+        />
 
         <Content
           className="admin-layout-content"
