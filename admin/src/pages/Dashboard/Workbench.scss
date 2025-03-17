@@ -1,3 +1,13 @@
 .user-works {
-    float: right;
+  float: right;
+}
+.row-item {
+  margin-bottom: 20px;
+}
+.nav-card-item {
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  text-align: center; /* 文字居中 */
+  height: 130px;
 }

@@ -1,4 +1,5 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
+
 
 import Login from "../pages/Login";
 import AdminLayout from "../pages/Layout";
@@ -36,8 +37,8 @@ const router = createBrowserRouter([
     ),
     children: [
       {
-        index: true,
-        element: <Dashboard />,
+        path: "",
+        element: <Navigate to="/dashboard" />,
       },
       {
         path: "/dashboard",
@@ -45,7 +46,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <Workbench />,
+            element: <Navigate to="/dashboard/workbench" />,
           },
           {
             path: "workbench",
@@ -67,7 +68,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <MenuList />,
+            element: <Navigate to="/menu/menu-list"   />,
           },
           {
             path: "menu-list",
@@ -85,7 +86,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <OrderList />,
+            element: <Navigate to="/menu/menu-list" />,
           },
           {
             path: "order-list",
@@ -103,7 +104,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <UserList />,
+            element: <Navigate to="/user/user-list" />,
           },
           {
             path: "user-list",
@@ -117,7 +118,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <SalesData />,
+            element: <Navigate to="/report/sales-data" />,
           },
           {
             path: "sales-data",
@@ -135,7 +136,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <Profile />,
+            element: <Navigate to="/personal/profile" />,
           },
           {
             path: "profile",
@@ -153,7 +154,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: "",
-            element: <BasicInfo />,
+            element: <Navigate to="/setting/basic-info" />,
           },
           {
             path: "basic-info",

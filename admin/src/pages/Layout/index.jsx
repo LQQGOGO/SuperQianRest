@@ -147,7 +147,7 @@ const menuList = [
       {
         key: "/setting/basic-info",
         icon: <InboxOutlined />,
-        label: "基本信息",
+        label: "店铺信息",
       },
     ],
   },

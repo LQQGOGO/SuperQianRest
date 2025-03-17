@@ -1,13 +1,54 @@
-import { Card, Avatar, Space, Col, Row } from "antd";
+import { useNavigate } from "react-router-dom";
+import { Card, Avatar, Space, Col, Row, Timeline } from "antd";
 import avatar from "@/assets/logo.png";
 import Icon from "@ant-design/icons";
 import RainOutlineSvg from "@/assets/Icons/RainOutline.svg?react";
 import ProjectMapSvg from "@/assets/Icons/ProjectMap.svg?react";
 import TodoSvg from "@/assets/Icons/Todo.svg?react";
 import MessageSvg from "@/assets/Icons/Message.svg?react";
+import {
+  UserOutlined,
+  BookOutlined,
+  CarryOutOutlined,
+  BarChartOutlined,
+  BellOutlined,
+  InboxOutlined,
+} from "@ant-design/icons";
 import "./Workbench.scss";
 
 const Workbench = () => {
+  const navigate = useNavigate();
+
+  // // 从 localStorage 读取数据
+  // const storedTabs = JSON.parse(sessionStorage.getItem("tabs")) || [
+  //   { key: "/dashboard/workbench", label: "工作台", closable: false },
+  // ];
+  // const storedActiveKey =
+  //   sessionStorage.getItem("activeKey") || storedTabs[0].key;
+
+  // const [tabs, setTabs] = useState(storedTabs);
+  // const [activeKey, setActiveKey] = useState(storedActiveKey);
+
+  // // 将 tabs 和 activeKey 存储到 sessionStorage
+  // useEffect(() => {
+  //   sessionStorage.setItem("tabs", JSON.stringify(tabs));
+  // }, [tabs]);
+
+  // useEffect(() => {
+  //   sessionStorage.setItem("activeKey", activeKey);
+  // }, [activeKey]);
+
+  const handleCardClick = (key) => {
+    // setActiveKey(key);
+    // setTabs((prevTabs) => {
+    //   // 检查 key 是否已存在，避免重复添加
+    //   if (prevTabs.some((tab) => tab.key === key)) {
+    //     return prevTabs; // 如果已存在，则不添加
+    //   }
+    //   return [...prevTabs, { key, label }];
+    // });
+    navigate(key);
+  };
   return (
     <div className="workbench-container">
       {/* 工作台顶部用户信息 */}
@@ -82,39 +123,104 @@ const Workbench = () => {
 
       {/* 工作台导航部分 */}
       <div className="workbench-nav">
-        <Row gutter={16} style={{ marginBottom: 20 }}>
+        <Row gutter={16} className="row-item">
           <Col span={12}>
-            <Card>Card content</Card>
+            <Card
+              className="nav-card-item"
+              hoverable={true}
+              onClick={() => handleCardClick("/user")}
+            >
+              <p>
+                <Icon
+                  component={UserOutlined}
+                  style={{ fontSize: 25, color: "#69c0ff" }}
+                />
+              </p>
+              <p>用户</p>
+            </Card>
           </Col>
           <Col span={12}>
-            <Card>Card content</Card>
+            <Card
+              className="nav-card-item"
+              hoverable={true}
+              onClick={() => handleCardClick("/menu")}
+            >
+              <p>
+                <BookOutlined style={{ fontSize: 25, color: "#95de64" }} />
+              </p>
+              <p>菜单</p>
+            </Card>
           </Col>
         </Row>
-        <Row gutter={16} style={{ marginBottom: 20 }}>
+        <Row gutter={16} className="row-item">
           <Col span={12}>
-            <Card>Card content</Card>
+            <Card
+              className="nav-card-item"
+              hoverable={true}
+              onClick={() => handleCardClick("/order")}
+            >
+              <p>
+                <CarryOutOutlined style={{ fontSize: 25, color: "#ff9c6e" }} />
+              </p>
+              <p>订单</p>
+            </Card>
           </Col>
           <Col span={12}>
-            <Card>Card content</Card>
+            <Card
+              className="nav-card-item"
+              hoverable={true}
+              onClick={() => handleCardClick("/report")}
+            >
+              <p>
+                <BarChartOutlined style={{ fontSize: 25, color: "#b37feb" }} />
+              </p>
+              <p>销售</p>
+            </Card>
           </Col>
         </Row>
-        <Row gutter={16} style={{ marginBottom: 20 }}>
+        <Row gutter={16} className="row-item">
           <Col span={12}>
-            <Card>Card content</Card>
+            <Card
+              className="nav-card-item"
+              hoverable={true}
+              onClick={() => handleCardClick("/personal/messages")}
+            >
+              <p>
+                <BellOutlined style={{ fontSize: 25, color: "#ffd666" }} />
+              </p>
+              <p>消息</p>
+            </Card>
           </Col>
           <Col span={12}>
-            <Card>Card content</Card>
-          </Col>
-        </Row>
-        <Row gutter={16} style={{ marginBottom: 20 }}>
-          <Col span={12}>
-            <Card>Card content</Card>
-          </Col>
-          <Col span={12}>
-            <Card>Card content</Card>
+            <Card
+              className="nav-card-item"
+              hoverable={true}
+              onClick={() => handleCardClick("/setting")}
+            >
+              <p>
+                <InboxOutlined style={{ fontSize: 25, color: "#5cdbd3" }} />
+              </p>
+              <p>店铺</p>
+            </Card>
           </Col>
         </Row>
       </div>
+
+      {/* 最新动态 */}
+      <Card title="最新动态" className="timeline">
+        <Timeline
+          items={[
+            {
+              color: "green",
+              children: "Create a services site 2015-09-01",
+            },
+            {
+              color: "green",
+              children: "Create a services site 2015-09-01",
+            },
+          ]}
+        ></Timeline>
+      </Card>
     </div>
   );
 };
