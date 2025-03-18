@@ -1,6 +1,14 @@
 .ant-layout {
   height: 100%;
 
+  .admin-layout-sider {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1000;
+  }
+
   .admin-layout-menu .ant-menu-item {
     font-size: 15px;
     color: white;
