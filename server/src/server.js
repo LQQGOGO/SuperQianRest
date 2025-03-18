@@ -1,31 +1,57 @@
+const express = require('express');
+const cors = require('cors');
+const path = require('path');
 require('dotenv').config();
-const app = require('./app');
-const { pool } = require('./config/database');
 
-// 处理未捕获的异常
-process.on('uncaughtException', (err) => {
-  console.error('未捕获的异常! 💥 关闭服务器...');
-  console.error(err.name, err.message);
-  process.exit(1);
+// 导入路由
+const authRoutes = require('./routes/authRoutes');
+const menuRoutes = require('./routes/menuRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+const userRoutes = require('./routes/userRoutes');
+const reportRoutes = require('./routes/reportRoutes');
+const personalRoutes = require('./routes/personalRoutes');
+const settingRoutes = require('./routes/settingRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+
+// 导入中间件
+const errorHandler = require('./middleware/errorHandler');
+
+// 在现有导入之后添加
+const initDatabase = require('./utils/initDb');
+
+const app = express();
+const PORT = process.env.PORT || 3050;
+
+// 中间件
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// 静态文件
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
+// API 路由
+app.use('/api/auth', authRoutes);
+app.use('/api/menu', menuRoutes);
+app.use('/api/category', categoryRoutes);
+app.use('/api/order', orderRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/report', reportRoutes);
+app.use('/api/personal', personalRoutes);
+app.use('/api/setting', settingRoutes);
+app.use('/api/upload', uploadRoutes);
+
+// 错误处理中间件
+app.use(errorHandler);
+
+// 在启动服务器之前添加
+// 初始化数据库
+initDatabase().catch((err) => {
+  console.error('数据库初始化失败:', err);
 });
-
-// 测试 MySQL 连接
-pool
-  .query('SELECT 1')
-  .then(() => console.log('MySQL 连接成功'))
-  .catch((err) => console.error('MySQL 连接失败:', err));
 
 // 启动服务器
-const port = process.env.PORT || 3050;
-const server = app.listen(port, () => {
-  console.log(`服务器运行在端口 ${port}`);
-});
-
-// 处理未处理的 Promise 拒绝
-process.on('unhandledRejection', (err) => {
-  console.error('未处理的 Promise 拒绝! 💥 关闭服务器...');
-  console.error(err.name, err.message);
-  server.close(() => {
-    process.exit(1);
-  });
+app.listen(PORT, () => {
+  console.log(`服务器运行在 http://localhost:${PORT}`);
 });
