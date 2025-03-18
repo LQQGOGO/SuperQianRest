@@ -24,14 +24,29 @@ const app = express();
 const PORT = process.env.PORT || 3050;
 
 // 中间件
-app.use(cors());
+app.use(cors({
+  origin: '*', // 允许所有来源
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // 静态文件
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
+// 在所有路由之前添加
+app.use((req, res, next) => {
+  console.log(`${new Date().toISOString()} [${req.method}] ${req.url}`);
+  next();
+});
+
 // API 路由
+app.get('/api/test', (req, res) => {
+  console.log('收到测试请求');
+  res.json({ message: '服务器正常运行' });
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/menu', menuRoutes);
 app.use('/api/category', categoryRoutes);

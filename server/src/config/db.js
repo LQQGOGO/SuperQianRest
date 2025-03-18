@@ -11,4 +11,9 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
+// 测试连接
+pool.query('SELECT 1')
+  .then(() => console.log('数据库连接成功'))
+  .catch(err => console.error('数据库连接失败:', err));
+
 module.exports = pool;

@@ -52,6 +52,7 @@ const login = async (req, res) => {
 
 // 获取当前用户信息
 const getUserInfo = async (req, res) => {
+  console.log('收到获取用户信息请求，用户ID:', req.user?.id);
   try {
     const user = await User.findById(req.user.id);
 
@@ -105,36 +106,34 @@ const getUserInfo = async (req, res) => {
 // 重置管理员密码
 const resetAdminPassword = async (req, res) => {
   try {
-    const { code } = req.body;
-
-    if (!code) {
-      return res.status(400).json({ status: 'fail', message: '请提供重置码' });
+    const { username, newPassword, resetCode } = req.body;
+    
+    if (!username || !newPassword || !resetCode) {
+      return res.status(400).json({ status: 'fail', message: '请提供所有必要字段' });
     }
-
-    if (code !== process.env.RESET_CODE) {
+    
+    if (resetCode !== process.env.RESET_CODE) {
       return res.status(401).json({ status: 'fail', message: '重置码无效' });
     }
-
-    // 查找管理员用户
-    const [adminRows] = await db.query("SELECT id FROM users WHERE role = 'admin' LIMIT 1");
-
-    if (adminRows.length === 0) {
-      return res.status(404).json({ status: 'fail', message: '未找到管理员账户' });
+    
+    const user = await User.findByUsername(username);
+    
+    if (!user) {
+      return res.status(404).json({ status: 'fail', message: '用户不存在' });
     }
-
-    const adminId = adminRows[0].id;
-
-    // 重置密码
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(process.env.DB_PASSWORD || 'admin123', salt);
-
-    await db.query('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, adminId]);
-
+    
+    if (user.role !== 'admin') {
+      return res.status(403).json({ status: 'fail', message: '只能重置管理员密码' });
+    }
+    
+    await User.update(user.id, { password: newPassword });
+    
     res.json({
-      message: '管理员密码已重置',
+      message: '管理员密码重置成功',
+      username: user.username,
     });
   } catch (error) {
-    console.error('重置管理员密码错误:', error);
+    console.error('重置密码错误:', error);
     res.status(500).json({ status: 'error', message: '服务器错误' });
   }
 };

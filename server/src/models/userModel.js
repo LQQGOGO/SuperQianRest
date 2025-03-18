@@ -16,12 +16,12 @@ class User {
   
   static async findById(id) {
     try {
-      const [rows] = await db.query(
-        'SELECT id, username, name, phone, email, role, avatar, status, created_at, updated_at FROM users WHERE id = ?',
-        [id]
-      );
+      console.log('查询用户ID:', id);
+      const [rows] = await db.query('SELECT * FROM users WHERE id = ?', [id]);
+      console.log('查询结果:', rows.length > 0 ? '找到用户' : '未找到用户');
       return rows[0];
     } catch (error) {
+      console.error('查询用户错误:', error);
       throw error;
     }
   }
