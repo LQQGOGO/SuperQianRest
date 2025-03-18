@@ -2,7 +2,7 @@ import axios from "axios";
 import { getToken } from "@/utils/token";
 
 const request = axios.create({
-  baseURL: "http://localhost:3000/admin",
+  baseURL: "http://localhost:3050/api",
   timeout: 5000,
 });
 
