@@ -53,6 +53,8 @@ const Workbench = () => {
             <div className="user-works-item">
               <p
                 style={{
+                  padding: 3,
+                  borderRadius: 5,
                   backgroundColor: "#eaeefd",
                 }}
               >
@@ -67,6 +69,8 @@ const Workbench = () => {
             <div className="user-works-item">
               <p
                 style={{
+                  padding: 3,
+                  borderRadius: 5,
                   backgroundColor: "#fff7e1",
                 }}
               >
@@ -81,6 +85,8 @@ const Workbench = () => {
             <div className="user-works-item">
               <p
                 style={{
+                  padding: 3,
+                  borderRadius: 5,
                   backgroundColor: "#eef9e8",
                 }}
               >
