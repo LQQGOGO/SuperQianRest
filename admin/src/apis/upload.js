@@ -1,4 +1,4 @@
-import axios from "axios";
+import request from "@/utils/request";
 import { message } from "antd";
 
 export const uploadImage = async (file) => {
@@ -8,9 +8,9 @@ export const uploadImage = async (file) => {
 
   try {
     // 发送请求
-    const response = await axios.post("/upload/image", formData, {
+    const response = await request.post("/upload/image", formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "multipart/form-data"
       },
     });
 

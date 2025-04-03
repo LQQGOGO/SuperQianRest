@@ -3,24 +3,25 @@ import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { Flex, message, Upload } from "antd";
 import { uploadImage } from "@/apis/upload";
 
-const getBase64 = (img, callback) => {
-  const reader = new FileReader();
-  reader.addEventListener("load", () => callback(reader.result));
-  reader.readAsDataURL(img);
-};
-
 const beforeUpload = (file) => {
-  const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
-  if (!isJpgOrPng) {
-    message.error("只能上传 JPG/PNG 格式的图片!");
+  // 根据后端接口支持的格式扩展验证
+  const isValidFormat = [
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+  ].includes(file.type);
+  if (!isValidFormat) {
+    message.error("只能上传 JPG/PNG/GIF/WEBP 格式的图片!");
     return false;
   }
-  const isLt2M = file.size / 1024 / 1024 < 2;
-  if (!isLt2M) {
-    message.error("图片大小不能超过 2MB!");
+  // 根据后端接口调整大小限制为 5MB
+  const isLt5M = file.size / 1024 / 1024 < 5;
+  if (!isLt5M) {
+    message.error("图片大小不能超过 5MB!");
     return false;
   }
-  return isJpgOrPng && isLt2M;
+  return isValidFormat && isLt5M;
 };
 
 const UploadImage = ({ value, onChange }) => {
@@ -55,6 +56,7 @@ const UploadImage = ({ value, onChange }) => {
       } catch (error) {
         setLoading(false);
         // 错误已在 API 函数中处理
+        console.error("上传失败:", error);
       }
     }
 
