@@ -41,15 +41,13 @@ const UploadImage = ({ value, onChange }) => {
 
     if (info.file.status === "done") {
       try {
-        // 使用我们的 API 函数上传图片
-        const fileUrl = await uploadImage(info.file.originFileObj);
 
         setLoading(false);
-        setImageUrl(fileUrl);
+        setImageUrl(info.file.response.fileUrl);
 
         // 调用 Form.Item 的 onChange 回调，将值传递给表单
         if (onChange) {
-          onChange(fileUrl);
+          onChange(info.file.response.fileUrl);
         }
 
         message.success("头像上传成功");
@@ -69,7 +67,9 @@ const UploadImage = ({ value, onChange }) => {
   const customRequest = async ({ file, onSuccess, onError }) => {
     try {
       // 手动上传文件
+      console.log("customRequest开始");
       const fileUrl = await uploadImage(file);
+      console.log("customRequest结束");
 
       // 调用成功回调
       onSuccess({ fileUrl }, new XMLHttpRequest());

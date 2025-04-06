@@ -13,6 +13,8 @@ export const uploadImage = async (file) => {
         "Content-Type": "multipart/form-data"
       },
     });
+    console.log("调用一次");
+    
 
     // 检查响应
     if (response.status === 200 && response.data.fileUrl) {
