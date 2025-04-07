@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { getUserList, createUser } from "@/apis/user";
+import { getUserList, createUser, editUser } from "@/apis/user";
 import {
   Avatar,
   List,
@@ -69,22 +69,43 @@ const UserList = () => {
 
   //用户信息表单
   const [formTitle, setFormTitle] = useState("新建用户");
-  const [formInitialValues, setFormInitialValues] = useState({
-    username: "",
-    email: "",
-    avatar: "",
-  });
   const [form] = Form.useForm();
-  const [formValues, setFormValues] = useState();
   const [open, setOpen] = useState(false);
-  const [role, setRole] = useState("admin");
+  const [editingUser, setEditingUser] = useState(null);
+
   const onCreate = async (values) => {
     console.log("Received values of form: ", values);
-    setFormValues({ ...values, status: 1 });
+    if (formTitle === "新建用户") {
+      const res = await createUser({ ...values, status: 1 });
+      console.log(res);
+    } else {
+      const res = await editUser(editingUser.id, { ...values, status: 1 });
+      console.log(res);
+    }
     setOpen(false);
-    console.log(formValues);
-    const res = await createUser(formValues);
-    console.log(res);
+  };
+
+  const handleEdit = (item) => {
+    setFormTitle("编辑用户");
+
+    // 打开前重置表单
+    form.resetFields();
+    setOpen(true);
+
+    // 设置表单值
+    form.setFieldsValue({
+      username: item.username,
+      email: item.email,
+      avatar: item.avatar,
+      name: item.name,
+      phone: item.phone,
+      role: item.role,
+    });
+    setEditingUser(item);
+  };
+
+  const handleDelete = (item) => {
+    console.log(item);
   };
 
   return (
@@ -102,14 +123,23 @@ const UserList = () => {
           }}
           onCancel={() => setOpen(false)}
           destroyOnClose
+          forceRender
           modalRender={(dom) => (
             <Form
               layout="vertical"
               form={form}
               name="user_form"
-              initialValues={formInitialValues}
-              clearOnDestroy
+              initialValues={{
+                role: "admin",
+                username: "",
+                password: "",
+                email: "",
+                name: "",
+                phone: "",
+                avatar: "",
+              }}
               onFinish={(values) => onCreate(values)}
+              preserve={false}
             >
               {dom}
             </Form>
@@ -131,22 +161,24 @@ const UserList = () => {
           >
             <Input />
           </Form.Item>
-          <Form.Item
-            name="password"
-            label="密码"
-            rules={[
-              {
-                required: true,
-                message: "请输入登录密码",
-              },
-              {
-                pattern: /^.{6,16}$/,
-                message: "应为长度在6-16位的密码",
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
+          {formTitle === "新建用户" && (
+            <Form.Item
+              name="password"
+              label="密码"
+              rules={[
+                {
+                  required: true,
+                  message: "请输入登录密码",
+                },
+                {
+                  pattern: /^.{6,16}$/,
+                  message: "应为长度在6-16位的密码",
+                },
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
+          )}
           <Form.Item
             name="name"
             label="用户昵称"
@@ -206,15 +238,11 @@ const UserList = () => {
               },
             ]}
           >
-            <Radio.Group
-              value={role}
-              options={[
-                { label: "管理员", value: "admin" },
-                { label: "员工", value: "staff" },
-                { label: "顾客", value: "customer" },
-              ]}
-              onChange={(e) => setRole(e.target.value)}
-            />
+            <Radio.Group>
+              <Radio value="admin">管理员</Radio>
+              <Radio value="staff">员工</Radio>
+              <Radio value="customer">顾客</Radio>
+            </Radio.Group>
           </Form.Item>
           <Form.Item
             name="avatar"
@@ -237,11 +265,9 @@ const UserList = () => {
             color="primary"
             onClick={() => {
               setFormTitle("新建用户");
-              setFormInitialValues({
-                username: "",
-                email: "",
-                avatar: "",
-              });
+
+              // 打开前重置表单
+              form.resetFields();
               setOpen(true);
             }}
           >
@@ -282,7 +308,16 @@ const UserList = () => {
           dataSource={users}
           locale={{ emptyText: <Empty description="暂无用户数据" /> }}
           renderItem={(item) => (
-            <List.Item>
+            <List.Item
+              actions={[
+                <a key="list-loadmore-edit" onClick={() => handleEdit(item)}>
+                  编辑
+                </a>,
+                <a key="list-loadmore-more" onClick={() => handleDelete(item)}>
+                  删除
+                </a>,
+              ]}
+            >
               <List.Item.Meta
                 avatar={<Avatar src={item.avatar} />}
                 title={item.name}
