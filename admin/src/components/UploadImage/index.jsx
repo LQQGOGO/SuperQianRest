@@ -67,9 +67,7 @@ const UploadImage = ({ value, onChange }) => {
   const customRequest = async ({ file, onSuccess, onError }) => {
     try {
       // 手动上传文件
-      console.log("customRequest开始");
       const fileUrl = await uploadImage(file);
-      console.log("customRequest结束");
 
       // 调用成功回调
       onSuccess({ fileUrl }, new XMLHttpRequest());

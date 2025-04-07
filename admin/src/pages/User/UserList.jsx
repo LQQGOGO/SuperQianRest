@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { getUserList } from "@/apis/user";
+import { getUserList, createUser } from "@/apis/user";
 import {
   Avatar,
   List,
@@ -11,6 +11,7 @@ import {
   Button,
   Form,
   Modal,
+  Radio,
 } from "antd";
 import Icon from "@ant-design/icons";
 import AddSvg from "@/assets/Icons/Add.svg?react";
@@ -76,10 +77,14 @@ const UserList = () => {
   const [form] = Form.useForm();
   const [formValues, setFormValues] = useState();
   const [open, setOpen] = useState(false);
-  const onCreate = (values) => {
+  const [role, setRole] = useState("admin");
+  const onCreate = async (values) => {
     console.log("Received values of form: ", values);
-    setFormValues(values);
+    setFormValues({ ...values, status: 1 });
     setOpen(false);
+    console.log(formValues);
+    const res = await createUser(formValues);
+    console.log(res);
   };
 
   return (
@@ -112,11 +117,63 @@ const UserList = () => {
         >
           <Form.Item
             name="username"
-            label="用户名"
+            label="用户账号"
             rules={[
               {
                 required: true,
-                message: "请输入用户名",
+                message: "请输入用户账号",
+              },
+              {
+                pattern: /^[0-9a-zA-Z]{3,16}$/,
+                message: "应为长度在3-16位数字或字母的账号",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            label="密码"
+            rules={[
+              {
+                required: true,
+                message: "请输入登录密码",
+              },
+              {
+                pattern: /^.{6,16}$/,
+                message: "应为长度在6-16位的密码",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="name"
+            label="用户昵称"
+            rules={[
+              {
+                required: true,
+                message: "请输入用户昵称",
+              },
+              {
+                pattern: /^.{1,16}$/,
+                message: "应为长度在1-16位的昵称",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="phone"
+            label="手机号"
+            rules={[
+              {
+                required: true,
+                message: "请输入手机号",
+              },
+              {
+                pattern: /^.{11}$/,
+                message: "应为11位数字的手机号",
               },
             ]}
           >
@@ -130,9 +187,34 @@ const UserList = () => {
                 required: true,
                 message: "请输入邮箱",
               },
+              {
+                pattern:
+                  /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.(com|cn|net|org|edu|gov|info|io|me)$/,
+                message: "请输入正确邮箱",
+              },
             ]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            name="role"
+            label="身份"
+            rules={[
+              {
+                required: true,
+                message: "请选择身份",
+              },
+            ]}
+          >
+            <Radio.Group
+              value={role}
+              options={[
+                { label: "管理员", value: "admin" },
+                { label: "员工", value: "staff" },
+                { label: "顾客", value: "customer" },
+              ]}
+              onChange={(e) => setRole(e.target.value)}
+            />
           </Form.Item>
           <Form.Item
             name="avatar"
@@ -147,6 +229,7 @@ const UserList = () => {
             <UploadImage />
           </Form.Item>
         </Modal>
+
         {/* 添加和删除 */}
         <Space className="user-list-button">
           <Button
@@ -176,6 +259,7 @@ const UserList = () => {
             删除
           </Button>
         </Space>
+
         {/* 搜索框 */}
         <Input
           placeholder="输入邮箱查找用户"
@@ -183,13 +267,14 @@ const UserList = () => {
           onChange={handleChange}
           style={{ marginBottom: 25 }}
         />
+
         {/* 用户列表 */}
         <List
           loading={loading}
           pagination={{
             position: "bottom",
             align: "center",
-            pageSize: 5,
+            pageSize: 7,
           }}
           style={{
             height: "650px",
@@ -200,7 +285,7 @@ const UserList = () => {
             <List.Item>
               <List.Item.Meta
                 avatar={<Avatar src={item.avatar} />}
-                title={item.username}
+                title={item.name}
                 description={item.email}
               />
             </List.Item>
