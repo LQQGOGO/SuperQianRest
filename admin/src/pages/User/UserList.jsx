@@ -16,13 +16,13 @@ import {
 } from "antd";
 import Icon from "@ant-design/icons";
 import AddSvg from "@/assets/Icons/Add.svg?react";
-import DeleteSvg from "@/assets/Icons/Delete.svg?react";
 import { debounce } from "@/utils/debounce";
 import UploadImage from "@/components/UploadImage";
+import ListComponent from "@/components/ListComponent";
 import "./UserList.scss";
 
 const UserList = () => {
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState([]); // 存储用户列表,用于显示
   const [allUsers, setAllUsers] = useState([]); // 存储所有用户，用于过滤
   const [loading, setLoading] = useState(false);
 
@@ -303,13 +303,6 @@ const UserList = () => {
             />
             新建
           </Button>
-          <Button type="primary" danger>
-            <Icon
-              component={DeleteSvg}
-              style={{ width: 15, height: 15, color: "#fff" }}
-            />
-            删除
-          </Button>
         </Space>
 
         {/* 搜索框 */}
@@ -321,7 +314,25 @@ const UserList = () => {
         />
 
         {/* 用户列表 */}
-        <List
+        <ListComponent
+          loading={loading}
+          pagination={{
+            position: "bottom",
+            align: "center",
+            pageSize: 7,
+          }}
+          dataSource={users}
+          handleEdit={handleEdit}
+          handleDelete={handleDelete}
+          renderItemContent={(item) => (
+            <List.Item.Meta
+              avatar={<Avatar src={item.avatar} />}
+              title={item.name}
+              description={item.email}
+            />
+          )}
+        ></ListComponent>
+        {/* <List
           loading={loading}
           pagination={{
             position: "bottom",
@@ -358,7 +369,7 @@ const UserList = () => {
               />
             </List.Item>
           )}
-        />
+        /> */}
       </Card>
     </div>
   );
