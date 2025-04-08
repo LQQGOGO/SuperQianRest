@@ -32,7 +32,7 @@ const createUser = async (req, res) => {
     const existingUser = await User.findByUsername(username);
     
     if (existingUser) {
-      return res.status(400).json({ status: 'fail', message: '用户名已存在' });
+      return res.status(400).json({ status: 'fail', message: '用户账号已存在' });
     }
     
     const newUser = await User.create({

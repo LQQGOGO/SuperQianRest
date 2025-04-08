@@ -74,15 +74,23 @@ const UserList = () => {
   const [editingUser, setEditingUser] = useState(null);
 
   const onCreate = async (values) => {
-    console.log("Received values of form: ", values);
-    if (formTitle === "新建用户") {
-      const res = await createUser({ ...values, status: 1 });
-      console.log(res);
-    } else {
-      const res = await editUser(editingUser.id, { ...values, status: 1 });
-      console.log(res);
+    try {
+      console.log("Received values of form: ", values);
+      let res;
+      if (formTitle === "新建用户") {
+        res = await createUser({ ...values, status: 1 });
+      } else {
+        res = await editUser(editingUser.id, { ...values, status: 1 });
+      }
+
+      if (res && res.message) {
+        message.success(res.message);
+        setOpen(false);
+      }
+    } catch (error) {
+      console.error("操作失败:", error);
+      // 错误处理已在API函数中完成
     }
-    setOpen(false);
   };
 
   const handleEdit = (item) => {

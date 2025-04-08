@@ -49,8 +49,6 @@ const UploadImage = ({ value, onChange }) => {
         if (onChange) {
           onChange(info.file.response.fileUrl);
         }
-
-        message.success("头像上传成功");
       } catch (error) {
         setLoading(false);
         // 错误已在 API 函数中处理
