@@ -346,6 +346,10 @@ const AdminLayout = () => {
             <Button
               type="text"
               icon={<ReloadOutlined />}
+              onClick={() => {
+                // 刷新当前页面内容
+                window.location.reload();
+              }}
               style={{
                 fontSize: "16px",
                 width: 40,

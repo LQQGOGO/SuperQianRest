@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { getUserList, createUser, editUser } from "@/apis/user";
+import { getUserList, createUser, editUser, deleteUser } from "@/apis/user";
 import {
   Avatar,
   List,
@@ -12,6 +12,7 @@ import {
   Form,
   Modal,
   Radio,
+  Popconfirm,
 } from "antd";
 import Icon from "@ant-design/icons";
 import AddSvg from "@/assets/Icons/Add.svg?react";
@@ -27,21 +28,23 @@ const UserList = () => {
 
   /* 获取用户列表 */
   useEffect(() => {
-    const getUsers = async () => {
-      setLoading(true);
-      try {
-        const userList = await getUserList();
-        setUsers(userList.items);
-        setAllUsers(userList.items); // 保存所有用户
-      } catch (error) {
-        console.error("获取用户列表失败:", error);
-        message.error("获取用户列表失败");
-      } finally {
-        setLoading(false);
-      }
-    };
-    getUsers();
+    fetchUserList();
   }, []);
+
+  // 获取用户列表的函数
+  const fetchUserList = async () => {
+    setLoading(true);
+    try {
+      const userList = await getUserList();
+      setUsers(userList.items);
+      setAllUsers(userList.items); // 保存所有用户
+    } catch (error) {
+      console.error("获取用户列表失败:", error);
+      message.error("获取用户列表失败");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 使用 useCallback 和防抖函数包装搜索逻辑
   const debouncedSearch = useCallback(
@@ -86,10 +89,10 @@ const UserList = () => {
       if (res && res.message) {
         message.success(res.message);
         setOpen(false);
+        fetchUserList(); // 添加或编辑用户后刷新列表
       }
     } catch (error) {
       console.error("操作失败:", error);
-      // 错误处理已在API函数中完成
     }
   };
 
@@ -112,8 +115,16 @@ const UserList = () => {
     setEditingUser(item);
   };
 
-  const handleDelete = (item) => {
-    console.log(item);
+  const handleDelete = async (item) => {
+    try {
+      const res = await deleteUser(item.id);
+      if (res && res.message) {
+        message.success(res.message);
+        fetchUserList(); // 删除后刷新列表
+      }
+    } catch (error) {
+      console.error("删除失败:", error);
+    }
   };
 
   return (
@@ -153,6 +164,7 @@ const UserList = () => {
             </Form>
           )}
         >
+          {/* 用户账号 */}
           <Form.Item
             name="username"
             label="用户账号"
@@ -169,6 +181,7 @@ const UserList = () => {
           >
             <Input />
           </Form.Item>
+          {/* 密码 */}
           {formTitle === "新建用户" && (
             <Form.Item
               name="password"
@@ -187,6 +200,7 @@ const UserList = () => {
               <Input.Password />
             </Form.Item>
           )}
+          {/* 用户昵称 */}
           <Form.Item
             name="name"
             label="用户昵称"
@@ -203,6 +217,7 @@ const UserList = () => {
           >
             <Input />
           </Form.Item>
+          {/* 手机号 */}
           <Form.Item
             name="phone"
             label="手机号"
@@ -219,6 +234,7 @@ const UserList = () => {
           >
             <Input />
           </Form.Item>
+          {/* 邮箱 */}
           <Form.Item
             name="email"
             label="邮箱"
@@ -236,6 +252,7 @@ const UserList = () => {
           >
             <Input />
           </Form.Item>
+          {/* 身份 */}
           <Form.Item
             name="role"
             label="身份"
@@ -252,6 +269,7 @@ const UserList = () => {
               <Radio value="customer">顾客</Radio>
             </Radio.Group>
           </Form.Item>
+          {/* 头像 */}
           <Form.Item
             name="avatar"
             label="头像"
@@ -321,9 +339,16 @@ const UserList = () => {
                 <a key="list-loadmore-edit" onClick={() => handleEdit(item)}>
                   编辑
                 </a>,
-                <a key="list-loadmore-more" onClick={() => handleDelete(item)}>
-                  删除
-                </a>,
+                <Popconfirm
+                  key="list-loadmore-delete"
+                  title="删除用户"
+                  description={`确定要删除用户 "${item.name}" 吗？`}
+                  onConfirm={() => handleDelete(item)}
+                  okText="确定"
+                  cancelText="取消"
+                >
+                  <a>删除</a>
+                </Popconfirm>,
               ]}
             >
               <List.Item.Meta

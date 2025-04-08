@@ -42,3 +42,19 @@ export const editUser = async (id, data) => {
     throw error;
   }
 };
+
+// 删除用户
+export const deleteUser = async (id) => {
+  try {
+    const res = await request.delete(`/user/delete/${id}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    if (error.response && error.response.status === 400) {
+      message.error(error.response.data.message || "删除用户失败");
+    } else {
+      message.error("删除用户失败");
+    }
+    throw error;
+  }
+};
