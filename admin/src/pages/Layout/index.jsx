@@ -236,12 +236,14 @@ const AdminLayout = () => {
   useEffect(() => {
     const currentPath = location.pathname;
 
-    // 如果当前路径不在 tabs 中，则添加
-    if (!tabs.some((tab) => tab.key === currentPath)) {
-      const label = findLabelByKey(currentPath, menuList);
-      if (label) {
-        const newTab = { key: currentPath, label, closable: true };
-        setTabs((prevTabs) => [...prevTabs, newTab]);
+    if (currentPath.split("/").length > 2) {
+      // 如果当前路径不在 tabs 中，则添加
+      if (!tabs.some((tab) => tab.key === currentPath)) {
+        const label = findLabelByKey(currentPath, menuList);
+        if (label) {
+          const newTab = { key: currentPath, label, closable: true };
+          setTabs((prevTabs) => [...prevTabs, newTab]);
+        }
       }
     }
 
@@ -346,10 +348,6 @@ const AdminLayout = () => {
             <Button
               type="text"
               icon={<ReloadOutlined />}
-              onClick={() => {
-                // 刷新当前页面内容
-                window.location.reload();
-              }}
               style={{
                 fontSize: "16px",
                 width: 40,
