@@ -289,7 +289,13 @@ const AdminLayout = () => {
         newActiveKey = newPanes[0].key;
       }
     }
-    setTabs(newPanes);
+
+    // 对tabs进行去重处理，以key作为唯一标识
+    const uniqueNewPanes = Array.from(
+      new Map(newPanes.map((item) => [item.key, item])).values()
+    );
+
+    setTabs(uniqueNewPanes);
     navigate(newActiveKey);
     // 不需要在这里设置 activeKey，因为路由变化会触发 useEffect
   };

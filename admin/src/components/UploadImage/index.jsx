@@ -89,7 +89,7 @@ const UploadImage = ({ value, onChange }) => {
           marginTop: 8,
         }}
       >
-        上传头像
+        上传图片
       </div>
     </button>
   );
