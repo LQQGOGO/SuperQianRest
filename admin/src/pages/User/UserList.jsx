@@ -78,12 +78,11 @@ const UserList = () => {
 
   const onCreate = async (values) => {
     try {
-      console.log("Received values of form: ", values);
       let res;
       if (formTitle === "新建用户") {
-        res = await createUser({ ...values, status: 1 });
+        res = await createUser(values);
       } else {
-        res = await editUser(editingUser.id, { ...values, status: 1 });
+        res = await editUser(editingUser.id, values);
       }
 
       if (res && res.message) {

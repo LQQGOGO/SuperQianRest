@@ -12,16 +12,23 @@ import {
   Tabs,
 } from "antd";
 import ListComponent from "@/components/ListComponent";
-import { getMenuList, getCategoryList } from "@/apis/menu";
+import {
+  getMenuList,
+  getCategoryList,
+  addMenu,
+  editMenu,
+  deleteMenu,
+} from "@/apis/menu";
 import "./MenuList.scss";
 import UploadImage from "@/components/UploadImage";
 import { PlusOutlined } from "@ant-design/icons";
 const MenuList = () => {
   const [menus, setMenus] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [filteredMenus, setFilteredMenus] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [editingMenu, setEditingMenu] = useState(null);
 
   useEffect(() => {
     fetchMenuList();
@@ -51,15 +58,35 @@ const MenuList = () => {
   };
 
   // 编辑菜单
-  const handleEdit = (id) => {
-    console.log(id);
+  const handleEdit = (item) => {
+    console.log(item);
     setFormTitle("编辑菜单");
+    // 打开前重置表单
+    form.resetFields();
     setOpen(true);
+
+    // 设置表单值
+    form.setFieldsValue({
+      name: item.name,
+      price: item.price,
+      description: item.description,
+      category_id: item.category_id,
+      image: item.image,
+    });
+    setEditingMenu(item);
   };
 
   // 删除菜单
-  const handleDelete = (id) => {
-    console.log(id);
+  const handleDelete = async (item) => {
+    try {
+      const res = await deleteMenu(item.id);
+      if (res && res.message) {
+        message.success(res.message);
+        fetchMenuList(); // 删除后刷新列表
+      }
+    } catch (error) {
+      console.error("删除失败:", error);
+    }
   };
 
   // 根据分类过滤菜单
@@ -74,8 +101,24 @@ const MenuList = () => {
   const [form] = Form.useForm();
 
   // 创建菜单
-  const onCreate = (values) => {
-    console.log(values);
+  const onCreate = async (values) => {
+    try {
+      let res;
+      if (formTitle === "添加菜品") {
+        res = await addMenu(values);
+      } else {
+        console.log(editingMenu);
+        res = await editMenu(editingMenu.id, values);
+      }
+
+      if (res && res.message) {
+        message.success(res.message);
+        setOpen(false);
+        fetchMenuList(); // 添加或编辑用户后刷新列表
+      }
+    } catch (error) {
+      console.error("操作失败:", error);
+    }
   };
 
   return (
@@ -99,7 +142,13 @@ const MenuList = () => {
               layout="vertical"
               form={form}
               name="menu_form"
-              initialValues={{}}
+              initialValues={{
+                name: "",
+                price: "",
+                description: "",
+                category_id: 1,
+                image: "",
+              }}
               onFinish={(values) => onCreate(values)}
               preserve={false}
             >
@@ -117,8 +166,8 @@ const MenuList = () => {
                 message: "请输入菜品名称",
               },
               {
-                pattern: /^.{3,16}$/,
-                message: "长度应在3-16位",
+                pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9\s]{3,16}$/,
+                message: "名称应为3-16个字符，可包含中文、字母、数字、空格",
               },
             ]}
           >
@@ -147,6 +196,10 @@ const MenuList = () => {
                 required: true,
                 message: "请输入菜品描述",
               },
+              {
+                pattern: /^.{5,20}$/,
+                message: "描述长度应为5~20个字符",
+              },
             ]}
           >
             <Input />
@@ -163,7 +216,7 @@ const MenuList = () => {
             ]}
           >
             <Radio.Group>
-              {filteredMenus.map((category) => (
+              {categories.map((category) => (
                 <Radio key={category.id} value={category.id}>
                   {category.name}
                 </Radio>
@@ -189,6 +242,8 @@ const MenuList = () => {
           type="primary"
           onClick={() => {
             setFormTitle("添加菜品");
+            // 打开前重置表单
+            form.resetFields();
             setOpen(true);
           }}
         >

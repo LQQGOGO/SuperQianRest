@@ -1,9 +1,13 @@
 import request from "@/utils/request";
-
+import { message } from "antd";
 // 获取菜单列表
 export const getMenuList = async () => {
   try {
-    const res = await request.get("/menu/list");
+    const res = await request.get("/menu/list", {
+      params: {
+        limit: 100,
+      },
+    });
     return res.data;
   } catch (error) {
     console.log(error);
@@ -27,5 +31,43 @@ export const addMenu = async (data) => {
     return res.data;
   } catch (error) {
     console.log(error);
+    if (error.response && error.response.status === 400) {
+      message.error(error.response.data.message || "创建菜品失败");
+    } else {
+      message.error("创建菜品失败");
+    }
+    throw error;
+  }
+};
+
+// 编辑菜品
+export const editMenu = async (id, data) => {
+  try {
+    const res = await request.put(`/menu/update/${id}`, data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    if (error.response && error.response.status === 400) {
+      message.error(error.response.data.message || "编辑菜品失败");
+    } else {
+      message.error("编辑菜品失败");
+    }
+    throw error;
+  }
+};
+
+// 删除菜品
+export const deleteMenu = async (id) => {
+  try {
+    const res = await request.delete(`/menu/delete/${id}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    if (error.response && error.response.status === 400) {
+      message.error(error.response.data.message || "删除菜品失败");
+    } else {
+      message.error("删除菜品失败");
+    }
+    throw error;
   }
 };
