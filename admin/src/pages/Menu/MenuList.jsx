@@ -10,6 +10,7 @@ import {
   Radio,
   Button,
   Tabs,
+  Image,
 } from "antd";
 import ListComponent from "@/components/ListComponent";
 import {
@@ -40,7 +41,10 @@ const MenuList = () => {
   const fetchMenuList = async () => {
     setLoading(true);
     try {
-      const menuList = await getMenuList();
+      const menuList = await getMenuList({
+        limit: 100,
+      });
+      
       const categoryList = await getCategoryList();
       // setActiveCategory(sessionStorage.getItem("activeCategory") || 1);
       // 根据分类过滤菜单
@@ -291,7 +295,13 @@ const MenuList = () => {
             handleEdit={handleEdit}
             renderItemContent={(item) => (
               <List.Item.Meta
-                avatar={<Avatar shape="square" size={80} src={item.image} />}
+                avatar={<Image
+                  width={80}
+                  height={80}
+                  alt="logo"
+                  src="error"
+                  fallback={item.image}
+                />}
                 title={
                   <div>
                     {item.name} ￥{item.price}

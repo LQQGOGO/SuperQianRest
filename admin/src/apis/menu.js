@@ -1,12 +1,10 @@
 import request from "@/utils/request";
 import { message } from "antd";
 // 获取菜单列表
-export const getMenuList = async () => {
+export const getMenuList = async (value) => {
   try {
     const res = await request.get("/menu/list", {
-      params: {
-        limit: 100,
-      },
+      params: value,
     });
     return res.data;
   } catch (error) {
@@ -89,6 +87,38 @@ export const addCategory = async (data) => {
       message.error(error.response.data.message || "添加种类失败");
     } else {
       message.error("添加种类失败");
+    }
+    throw error;
+  }
+};
+
+// 删除种类
+export const deleteCategory = async (id) => {
+  try {
+    const res = await request.delete(`/category/delete/${id}`);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    if (error.response && error.response.status === 400) {
+      message.error(error.response.data.message || "删除种类失败");
+    } else {
+      message.error("删除种类失败");
+    }
+    throw error;
+  }
+};
+
+// 编辑种类
+export const editCategory = async (id, data) => {
+  try {
+    const res = await request.put(`/category/update/${id}`, data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    if (error.response && error.response.status === 400) {
+      message.error(error.response.data.message || "编辑种类失败");
+    } else {
+      message.error("编辑种类失败");
     }
     throw error;
   }
