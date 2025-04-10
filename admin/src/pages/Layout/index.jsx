@@ -79,9 +79,9 @@ const menuList = [
         label: "菜单列表",
       },
       {
-        key: "/menu/add-menu",
+        key: "/menu/category-list",
         icon: <PlusOutlined />,
-        label: "添加菜品",
+        label: "菜品种类",
       },
     ],
   },

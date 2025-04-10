@@ -17,7 +17,7 @@ import Workbench from "../pages/Dashboard/Workbench";
 import Analysis from "../pages/Dashboard/Analysis";
 import Monitor from "../pages/Dashboard/Monitor";
 import MenuList from "../pages/Menu/MenuList";
-import AddMenu from "../pages/Menu/AddMenu";
+import CategoryList from "../pages/Menu/CategoryList";
 import OrderList from "../pages/Order/OrderList";
 import OrderStats from "../pages/Order/OrderStats";
 import UserList from "../pages/User/UserList";
@@ -75,8 +75,8 @@ const router = createBrowserRouter([
             element: <MenuList />,
           },
           {
-            path: "add-menu",
-            element: <AddMenu />,
+            path: "category-list",
+            element: <CategoryList />,
           },
         ],
       },

@@ -22,6 +22,8 @@ import {
 import "./MenuList.scss";
 import UploadImage from "@/components/UploadImage";
 import { PlusOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
+
 const MenuList = () => {
   const [menus, setMenus] = useState([]);
   const [filteredMenus, setFilteredMenus] = useState([]);
@@ -29,7 +31,7 @@ const MenuList = () => {
   const [activeCategory, setActiveCategory] = useState(1);
   const [loading, setLoading] = useState(false);
   const [editingMenu, setEditingMenu] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     fetchMenuList();
   }, []);
@@ -263,7 +265,13 @@ const MenuList = () => {
           }}
           tabBarExtraContent={{
             right: (
-              <Button type="default" size="small" onClick={() => {}}>
+              <Button
+                type="default"
+                size="small"
+                onClick={() => {
+                  navigate("/menu/category-list");
+                }}
+              >
                 <PlusOutlined />
               </Button>
             ),

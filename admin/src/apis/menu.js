@@ -14,16 +14,6 @@ export const getMenuList = async () => {
   }
 };
 
-// 获取种类
-export const getCategoryList = async () => {
-  try {
-    const res = await request.get("/category/list");
-    return res.data;
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 // 添加菜品
 export const addMenu = async (data) => {
   try {
@@ -67,6 +57,38 @@ export const deleteMenu = async (id) => {
       message.error(error.response.data.message || "删除菜品失败");
     } else {
       message.error("删除菜品失败");
+    }
+    throw error;
+  }
+};
+
+// 获取种类
+export const getCategoryList = async () => {
+  try {
+    const res = await request.get("/category/list");
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    if (error.response && error.response.status === 400) {
+      message.error(error.response.data.message || "获取种类失败");
+    } else {
+      message.error("获取种类失败");
+    }
+    throw error;
+  }
+};
+
+// 添加种类
+export const addCategory = async (data) => {
+  try {
+    const res = await request.post("/category/add", data);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    if (error.response && error.response.status === 400) {
+      message.error(error.response.data.message || "添加种类失败");
+    } else {
+      message.error("添加种类失败");
     }
     throw error;
   }
