@@ -1,4 +1,4 @@
-import { Card, Tabs, List } from "antd";
+import { Card, Tabs, List, Button } from "antd";
 import { getOrderList, getOrderDetail } from "@/apis/order";
 import { useEffect, useState } from "react";
 import ListComponent from "@/components/ListComponent";
@@ -105,7 +105,15 @@ const OrderList = () => {
               const hour = String(date.getUTCHours()).padStart(2, "0");
               const minute = String(date.getUTCMinutes()).padStart(2, "0");
               const formatted = `${month}-${day} ${hour}:${minute}`;
-              const formattedStatus = item.status === "pending" ? "未接单" : item.status === "processing" ? "制作中" : item.status === "completed" ? "已完成" : "状态异常";
+              const formattedStatus =
+                item.status === "pending"
+                  ? "未接单"
+                  : item.status === "processing"
+                  ? "制作中"
+                  : item.status === "completed"
+                  ? "已完成"
+                  : "状态异常";
+
               return (
                 <List.Item.Meta
                   title={
@@ -120,6 +128,39 @@ const OrderList = () => {
                   }
                 />
               );
+            }}
+            actions={(item) => {
+              if (item.status === "pending") {
+                return [
+                  <Button
+                    type="primary"
+                    key="accept"
+                    onClick={() => handleEdit(item.id)}
+                  >
+                    接单
+                  </Button>,
+                ];
+              } else if (item.status === "processing") {
+                return [
+                  <Button
+                    type="primary"
+                    key="complete"
+                    onClick={() => handleEdit(item.id)}
+                  >
+                    完成
+                  </Button>,
+                ];
+              } else {
+                return [
+                  <Button
+                    danger
+                    key="delete"
+                    onClick={() => handleDelete(item.id)}
+                  >
+                    删除
+                  </Button>,
+                ];
+              }
             }}
           />
         </div>

@@ -7,6 +7,7 @@ const ListComponent = ({
   handleEdit,
   handleDelete,
   renderItemContent,
+  actions,
 }) => {
   return (
     <List
@@ -19,21 +20,28 @@ const ListComponent = ({
       locale={{ emptyText: <Empty description="暂无用户数据" /> }}
       renderItem={(item) => (
         <List.Item
-          actions={[
-            <a key="list-loadmore-edit" onClick={() => handleEdit(item)}>
-              编辑
-            </a>,
-            <Popconfirm
-              key="list-loadmore-delete"
-              title="删除"
-              description={`确定要删除 "${item.name}" 吗？`}
-              onConfirm={() => handleDelete(item)}
-              okText="确定"
-              cancelText="取消"
-            >
-              <a>删除</a>
-            </Popconfirm>,
-          ]}
+          actions={
+            actions
+              ? actions(item)
+              : [
+                  <a
+                    key="list-loadmore-edit"
+                    onClick={() => handleEdit(item.id)}
+                  >
+                    编辑
+                  </a>,
+                  <Popconfirm
+                    key="list-loadmore-delete"
+                    title="删除"
+                    description={`确定要删除吗？`}
+                    onConfirm={() => handleDelete(item.id)}
+                    okText="确定"
+                    cancelText="取消"
+                  >
+                    <a>删除</a>
+                  </Popconfirm>,
+                ]
+          }
         >
           {/* <List.Item.Meta
             avatar={<Avatar src={item.avatar} />}
