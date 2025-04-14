@@ -1,7 +1,6 @@
-import { Card, Tabs, List, Button, Popconfirm } from "antd";
-import { getOrderList, updateOrderStatus, deleteOrder } from "@/apis/order";
+import { Card, Tabs, List, Button, Popconfirm, Modal } from "antd";
+import { getOrderList, updateOrderStatus, deleteOrder, getOrderDetail } from "@/apis/order";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import ListComponent from "@/components/ListComponent";
 
 const OrderList = () => {
@@ -29,7 +28,10 @@ const OrderList = () => {
   const [loading, setLoading] = useState(false);
   const [currentStatus, setCurrentStatus] = useState("pending");
   const [filteredOrderList, setFilteredOrderList] = useState([]);
-  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+
+  //订单详情
+  const [orderDetail, setOrderDetail] = useState(null);
 
   // 获取订单列表
   const fetchOrderList = async () => {
@@ -85,13 +87,30 @@ const OrderList = () => {
   };
 
   //查看详情
-  const handleDetail = (item) => {
-    navigate(`/order/detail/${item.id}`);
+  const handleDetail = async (item) => {
+    const res = await getOrderDetail(item.id);
+    console.log(res);
+    
+    setOrderDetail(res);
+    setOpen(true);
   };
 
   return (
     <div className="order-list-container">
       <Card>
+        {/* 订单详情 */}
+        <Modal
+          open={open}
+          title="订单详情"
+          okText="确认"
+          cancelText="关闭"
+          okButtonProps={{ autoFocus: true, htmlType: "submit" }}
+          onCancel={() => setOpen(false)}
+          destroyOnClose
+        >
+          <p>订单详情</p>
+        </Modal>
+
         {/* 订单状态 */}
         <Tabs
           defaultActiveKey="pending"
@@ -101,97 +120,101 @@ const OrderList = () => {
         />
 
         {/* 订单列表 */}
-          <ListComponent
-            dataSource={filteredOrderList}
-            loading={loading}
-            pagination={{
-              position: "bottom",
-              align: "center",
-              pageSize: 3,
-            }}
-            renderItemContent={(item) => {
-              const date = new Date(item.created_at);
-              const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-              const day = String(date.getUTCDate()).padStart(2, "0");
-              const hour = String(date.getUTCHours()).padStart(2, "0");
-              const minute = String(date.getUTCMinutes()).padStart(2, "0");
-              const formatted = `${month}-${day} ${hour}:${minute}`;
-              const formattedStatus =
-                item.status === "pending"
-                  ? "未接单"
-                  : item.status === "processing"
-                  ? "制作中"
-                  : item.status === "completed"
-                  ? "已完成"
-                  : "状态异常";
+        <ListComponent
+          dataSource={filteredOrderList}
+          loading={loading}
+          pagination={{
+            position: "bottom",
+            align: "center",
+            pageSize: 3,
+          }}
+          renderItemContent={(item) => {
+            const date = new Date(item.created_at);
+            const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+            const day = String(date.getUTCDate()).padStart(2, "0");
+            const hour = String(date.getUTCHours()).padStart(2, "0");
+            const minute = String(date.getUTCMinutes()).padStart(2, "0");
+            const formatted = `${month}-${day} ${hour}:${minute}`;
+            const formattedStatus =
+              item.status === "pending"
+                ? "未接单"
+                : item.status === "processing"
+                ? "制作中"
+                : item.status === "completed"
+                ? "已完成"
+                : "状态异常";
 
-              return (
-                <List.Item.Meta
-                  title={
-                    <div style={{ fontSize: "16px", fontWeight: "bold" }}>
-                      {item.total_amount}元 {formattedStatus}
-                    </div>
-                  }
-                  description={
-                    <div style={{ whiteSpace: "pre-line" }}>
-                      {`用户：${item.user_name}\n地址：${item.address}\n创建时间：${formatted}`}
-                    </div>
-                  }
-                />
+            return (
+              <List.Item.Meta
+                title={
+                  <div style={{ fontSize: "16px", fontWeight: "bold" }}>
+                    {item.total_amount}元 {formattedStatus}
+                  </div>
+                }
+                description={
+                  <div style={{ whiteSpace: "pre-line" }}>
+                    {`用户：${item.user_name}\n地址：${item.address}\n创建时间：${formatted}`}
+                  </div>
+                }
+              />
+            );
+          }}
+          actions={(item) => {
+            const result = [];
+            if (item.status === "pending") {
+              result.push(
+                <Popconfirm
+                  key="list-loadmore-delete"
+                  title="接单"
+                  description={`确定要接单吗？`}
+                  onConfirm={() => (handleClick ? handleClick(item) : null)}
+                  okText="确定"
+                  cancelText="取消"
+                >
+                  <Button type="primary" key="accept">
+                    接单
+                  </Button>
+                </Popconfirm>
               );
-            }}
-            actions={(item) => {
-              const result = [];
-              if (item.status === "pending") {
-                result.push(
-                  <Popconfirm
-                    key="list-loadmore-delete"
-                    title="接单"
-                    description={`确定要接单吗？`}
-                    onConfirm={() => (handleClick ? handleClick(item) : null)}
-                    okText="确定"
-                    cancelText="取消"
-                  >
-                    <Button type="primary" key="accept">
-                      接单
-                    </Button>
-                  </Popconfirm>
-                );
-              } else if (item.status === "processing") {
-                result.push(
-                  <Popconfirm
-                    key="list-loadmore-delete"
-                    title="完成"
-                    description={`是否完成了订单？`}
-                    onConfirm={() => (handleClick ? handleClick(item) : null)}
-                    okText="确定"
-                    cancelText="取消"
-                  >
-                    <Button type="primary" key="complete">
-                      完成
-                    </Button>
-                  </Popconfirm>
-                );
-              } else {
-                result.push(
-                  <Popconfirm
-                    key="list-loadmore-delete"
-                    title="删除"
-                    description={`确定要删除该订单吗？`}
-                    onConfirm={() => (handleClick ? handleClick(item) : null)}
-                    okText="确定"
-                    cancelText="取消"
-                  >
-                    <Button danger key="delete">
-                      删除
-                    </Button>
-                  </Popconfirm>
-                );
-              }
-              return [<Button key="accept" onClick={() => handleDetail(item)}>查看详情</Button>, ...result];
-            }}
-          />
-        
+            } else if (item.status === "processing") {
+              result.push(
+                <Popconfirm
+                  key="list-loadmore-delete"
+                  title="完成"
+                  description={`是否完成了订单？`}
+                  onConfirm={() => (handleClick ? handleClick(item) : null)}
+                  okText="确定"
+                  cancelText="取消"
+                >
+                  <Button type="primary" key="complete">
+                    完成
+                  </Button>
+                </Popconfirm>
+              );
+            } else {
+              result.push(
+                <Popconfirm
+                  key="list-loadmore-delete"
+                  title="删除"
+                  description={`确定要删除该订单吗？`}
+                  onConfirm={() => (handleClick ? handleClick(item) : null)}
+                  okText="确定"
+                  cancelText="取消"
+                >
+                  <Button danger key="delete">
+                    删除
+                  </Button>
+                </Popconfirm>
+              );
+            }
+            return [
+              <Button key="accept" onClick={() => handleDetail(item)}>
+                查看详情
+              </Button>,
+              ...result,
+            ];
+          }}
+        />
       </Card>
     </div>
   );
