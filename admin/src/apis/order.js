@@ -33,4 +33,36 @@ export const getOrderDetail = async (id) => {
   }
 };
 
+// 更新订单状态
+export const updateOrderStatus = async (id, status) => {
+  try {
+    const res = await request.put(`/order/update/${id}`, { status });
+    message.success("更新订单状态成功");
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    if (error.response && error.response.status === 400) {
+      message.error(error.response.data.message || "更新订单状态失败");
+    } else {
+      message.error("更新订单状态失败");
+    }
+    throw error;
+  }
+};
 
+// 删除订单
+export const deleteOrder = async (id) => {
+  try {
+    const res = await request.delete(`/order/delete/${id}`);
+    message.success("删除订单成功");
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    if (error.response && error.response.status === 400) {
+      message.error(error.response.data.message || "删除订单失败");
+    } else {
+      message.error("删除订单失败");
+    }
+    throw error;
+  }
+};
