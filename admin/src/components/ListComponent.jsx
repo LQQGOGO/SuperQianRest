@@ -11,7 +11,7 @@ const ListComponent = ({
 }) => {
   return (
     <List
-      loading={loading}
+      loading={loading ? loading : false}
       pagination={pagination}
       style={{
         height: "650px",

@@ -1,5 +1,10 @@
-import { Card, Tabs, List, Button, Popconfirm, Modal } from "antd";
-import { getOrderList, updateOrderStatus, deleteOrder, getOrderDetail } from "@/apis/order";
+import { Card, Tabs, List, Button, Popconfirm, Modal, Avatar } from "antd";
+import {
+  getOrderList,
+  updateOrderStatus,
+  deleteOrder,
+  getOrderDetail,
+} from "@/apis/order";
 import { useEffect, useState } from "react";
 import ListComponent from "@/components/ListComponent";
 
@@ -37,7 +42,6 @@ const OrderList = () => {
   const fetchOrderList = async () => {
     setLoading(true);
     const res = await getOrderList({ limit: 100 });
-
     setOrderList(res.items);
 
     if (currentStatus === "all") {
@@ -90,7 +94,7 @@ const OrderList = () => {
   const handleDetail = async (item) => {
     const res = await getOrderDetail(item.id);
     console.log(res);
-    
+
     setOrderDetail(res);
     setOpen(true);
   };
@@ -102,13 +106,86 @@ const OrderList = () => {
         <Modal
           open={open}
           title="订单详情"
-          okText="确认"
-          cancelText="关闭"
           okButtonProps={{ autoFocus: true, htmlType: "submit" }}
-          onCancel={() => setOpen(false)}
           destroyOnClose
+          onCancel={() => setOpen(false)}
+          footer={[
+            <Button key="cancel" onClick={() => setOpen(false)}>
+              关闭
+            </Button>,
+          ]}
         >
-          <p>订单详情</p>
+          {/* 订单状态 */}
+          {orderDetail && (
+            <h1>
+              {orderDetail.order.status === "pending"
+                ? "未接单"
+                : orderDetail.order.status === "processing"
+                ? "制作中"
+                : orderDetail.order.status === "completed"
+                ? "已完成"
+                : "状态异常"}
+            </h1>
+          )}
+          {/* 订单项 */}
+          {orderDetail && (
+            <List
+              itemLayout="horizontal"
+              dataSource={orderDetail.items}
+              renderItem={(item) => (
+                <List.Item>
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar shape="square" size={64} src={item.image} />
+                    }
+                    title={
+                      <div>
+                        <span>{item.menu_item_name}</span>
+                        <span style={{ fontSize: "15px", float: "right" }}>
+                          {item.subtotal}元
+                        </span>
+                      </div>
+                    }
+                    description={
+                      <p>{`￥${item.unit_price} x ${item.quantity}份`}</p>
+                    }
+                  />
+                </List.Item>
+              )}
+            />
+          )}
+
+          {/* 订单信息 */}
+          {orderDetail && (
+            <div>
+              <div
+                style={{
+                  fontSize: "15px",
+                  fontWeight: "bold",
+                }}
+              >
+                {/* 总价 */}
+                <span
+                  style={{
+                    fontSize: "15px",
+                    fontWeight: "bold",
+                    float: "right",
+                  }}
+                >
+                  总价：{orderDetail.order.total_amount}元
+                </span>
+                {/* 用户名 */}
+                <p>用户名：{orderDetail.order.user_name}</p>
+                {/* 手机号 */}
+                <p>手机号：{orderDetail.order.phone}</p>
+                {/* 地址 */}
+                <p>地址：{orderDetail.order.address}</p>
+              </div>
+              {/* 订单信息 */}
+              <p>订单号：{orderDetail.order.order_number}</p>
+              <p>订单创建时间：{orderDetail.order.created_at}</p>
+            </div>
+          )}
         </Modal>
 
         {/* 订单状态 */}
