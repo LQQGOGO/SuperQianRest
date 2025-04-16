@@ -66,3 +66,15 @@ export const deleteOrder = async (id) => {
     throw error;
   }
 };
+
+// 获取订单统计数据
+export const getOrderStats = async () => {
+  try {
+    const res = await request.get("/order/stats");
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    message.error("获取订单统计数据失败");
+    throw error;
+  }
+};
