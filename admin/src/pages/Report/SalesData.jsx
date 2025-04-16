@@ -1,12 +1,16 @@
 import { getSalesData } from "@/apis/report";
 import { useEffect, useState } from "react";
-import { Card, Statistic, Row, Col } from "antd";
+import { Card, Statistic, Tabs } from "antd";
 import "./SalesData.scss";
 import WordCloud from "@/components/WordCloud";
+import LineChart from "@/components/LineChart";
+import dayjs from "dayjs";
 
 const SalesData = () => {
   const [salesData, setSalesData] = useState({});
   const [hotDishes, setHotDishes] = useState([]);
+  const [salesTrend, setSalesTrend] = useState([]);
+  const [orderTrend, setOrderTrend] = useState([]);
 
   // 获取销售数据
   const fetchSalesData = async () => {
@@ -19,8 +23,22 @@ const SalesData = () => {
       value: item.total_quantity,
     }));
 
+    // 获取销售额趋势
+    const salesTrend = res.dailySales.map((item) => ({
+      date: dayjs(item.date).format("MM-DD"),
+      value: item.total_sales,
+    }));
+
+    // 获取订单趋势
+    const orderTrend = res.dailySales.map((item) => ({
+      date: dayjs(item.date).format("MM-DD"),
+      value: item.order_count,
+    }));
+    console.log(salesTrend, orderTrend);
     setSalesData(res);
     setHotDishes(topDishes);
+    setSalesTrend(salesTrend);
+    setOrderTrend(orderTrend);
   };
 
   useEffect(() => {
@@ -51,6 +69,25 @@ const SalesData = () => {
       {/* 热门菜品 */}
       <Card title="热门菜品">
         <WordCloud data={hotDishes} />
+      </Card>
+
+      {/* 销售额趋势图 */}
+      <Card>
+        <Tabs
+          defaultActiveKey="1"
+          items={[
+            {
+              key: "1",
+              label: "销售额",
+              children: <LineChart data={salesTrend} title="销售额" />,
+            },
+            {
+              key: "2",
+              label: "订单量",
+              children: <LineChart data={orderTrend} title="订单量" />,
+            },
+          ]}
+        />
       </Card>
     </div>
   );
