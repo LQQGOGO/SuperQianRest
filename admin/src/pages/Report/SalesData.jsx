@@ -4,6 +4,7 @@ import { Card, Statistic, Tabs } from "antd";
 import "./SalesData.scss";
 import WordCloud from "@/components/WordCloud";
 import LineChart from "@/components/LineChart";
+import BarChart from "@/components/BarChart";
 import dayjs from "dayjs";
 
 const SalesData = () => {
@@ -11,11 +12,13 @@ const SalesData = () => {
   const [hotDishes, setHotDishes] = useState([]);
   const [salesTrend, setSalesTrend] = useState([]);
   const [orderTrend, setOrderTrend] = useState([]);
+  const [categoryNames, setCategoryNames] = useState([]);
+  const [categoryOrders, setCategoryOrders] = useState([]);
+  const [categorySales, setCategorySales] = useState([]);
 
   // 获取销售数据
   const fetchSalesData = async () => {
     const res = await getSalesData();
-    console.log(res);
 
     // 获取热门菜品
     const topDishes = res.topItems.map((item) => ({
@@ -34,7 +37,16 @@ const SalesData = () => {
       date: dayjs(item.date).format("MM-DD"),
       value: item.order_count,
     }));
-    console.log(salesTrend, orderTrend);
+
+    // 获取分类销量统计
+    const categoryNames = res.categorySales.map((item) => item.category_name);
+    const categoryOrders = res.categorySales.map((item) => item.order_count);
+    const categorySales = res.categorySales.map((item) => item.total_sales);
+
+    setCategoryNames(categoryNames);
+    setCategoryOrders(categoryOrders);
+    setCategorySales(categorySales);
+
     setSalesData(res);
     setHotDishes(topDishes);
     setSalesTrend(salesTrend);
@@ -66,11 +78,6 @@ const SalesData = () => {
         )}
       </Card>
 
-      {/* 热门菜品 */}
-      <Card title="热门菜品">
-        <WordCloud data={hotDishes} />
-      </Card>
-
       {/* 销售额趋势图 */}
       <Card>
         <Tabs
@@ -88,6 +95,44 @@ const SalesData = () => {
             },
           ]}
         />
+      </Card>
+
+      {/* 分类销量统计 */}
+      <Card>
+        <Tabs
+          defaultActiveKey="1"
+          items={[
+            {
+              key: "1",
+              label: "销售额",
+              children: (
+                <BarChart
+                  title="分类销售额统计"
+                  xData={categoryNames}
+                  yData={categorySales}
+                  color="#91cc75"
+                />
+              ),
+            },
+            {
+              key: "2",
+              label: "订单量",
+              children: (
+                <BarChart
+                  title="分类订单量统计"
+                  xData={categoryNames}
+                  yData={categoryOrders}
+                  color="#91cc75"
+                />
+              ),
+            },
+          ]}
+        />
+      </Card>
+
+      {/* 热门菜品 */}
+      <Card title="热门菜品">
+        <WordCloud data={hotDishes} />
       </Card>
     </div>
   );
