@@ -1,0 +1,18 @@
+.profile-container {
+  .ant-card {
+    margin-bottom: 20px;
+  }
+  .avatar-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .personal-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 16px;
+  }
+}
