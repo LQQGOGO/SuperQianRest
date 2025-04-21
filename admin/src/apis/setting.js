@@ -12,3 +12,15 @@ export const getShopInfo = async () => {
     throw error;
   }
 };
+
+// 修改店铺信息
+export const updateShopInfo = async (params) => {
+  try {
+    const res = await request.put("/setting/update", params);
+    return res.data;
+  } catch (error) {
+    console.log(error);
+    message.error("修改店铺信息失败");
+    throw error;
+  }
+};
