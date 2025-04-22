@@ -29,7 +29,6 @@ const Profile = () => {
   // 获取个人信息数据
   const fetchPersonalProfile = async () => {
     const res = await getPersonalProfile();
-    console.log(res);
     setProfile(res);
   };
 
