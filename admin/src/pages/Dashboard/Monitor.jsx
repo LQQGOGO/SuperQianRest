@@ -1,9 +1,19 @@
 import { Card } from "antd";
+import { useState, useEffect } from "react";
 import "./Monitor.scss";
 import ChinaMap from "@/components/ChinaMap";
+import Clock from "@/components/Clock";
+import AnimatedNumber from "@/components/AnimatedNumber";
+import RippleCountdown from "@/components/RippleCountdown";
 
 const Monitor = () => {
-  
+  const [from, setFrom] = useState(0);
+  const [to, setTo] = useState(1000);
+
+  useEffect(() => {
+    setFrom(1000);
+    setTo(170);
+  }, []);
 
   return (
     <div className="monitor-container">
@@ -108,7 +118,18 @@ const Monitor = () => {
       <Card className="monitor-card" title="在线人数">
         <div className="monitor-card-content">
           <div className="monitor-card-content-item time">
-            
+            <Clock />
+          </div>
+          <div className="monitor-card-content-item animated-number">
+            <AnimatedNumber from={1000} to={170} duration={4000} />
+          </div>
+          <div className="monitor-card-content-item">
+            <span className="monitor-card-title">当前在线人数</span>
+          </div>
+          <div className="monitor-card-content-item">
+            <RippleCountdown seconds={9} onEnd={() => {
+              console.log("end");
+            }} />
           </div>
         </div>
       </Card>
