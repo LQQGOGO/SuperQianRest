@@ -1,7 +1,10 @@
 import { Card } from "antd";
 import "./Monitor.scss";
+import ChinaMap from "@/components/ChinaMap";
 
 const Monitor = () => {
+  
+
   return (
     <div className="monitor-container">
       {/* 总访问人数 */}
@@ -44,7 +47,6 @@ const Monitor = () => {
             <i>
               <svg
                 t="1745328385918"
-                class="icon"
                 viewBox="0 0 1024 1024"
                 version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
@@ -75,7 +77,6 @@ const Monitor = () => {
             <i>
               <svg
                 t="1745328719513"
-                class="icon"
                 viewBox="0 0 1024 1024"
                 version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
@@ -93,6 +94,22 @@ const Monitor = () => {
           </span>
           <span className="monitor-card-content">28.8%</span>
           <span className="monitor-card-title">转化率</span>
+        </div>
+      </Card>
+
+      {/* 用户分布 */}
+      <Card className="monitor-card" title="用户分布">
+        <div className="monitor-card-content">
+          <ChinaMap />
+        </div>
+      </Card>
+
+      {/* 在线人数 */}
+      <Card className="monitor-card" title="在线人数">
+        <div className="monitor-card-content">
+          <div className="monitor-card-content-item time">
+            
+          </div>
         </div>
       </Card>
     </div>
