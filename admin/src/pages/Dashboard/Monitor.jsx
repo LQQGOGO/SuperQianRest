@@ -1,5 +1,5 @@
 import { Card } from "antd";
-import { useState} from "react";
+import { useState } from "react";
 import "./Monitor.scss";
 import ChinaMap from "@/components/ChinaMap";
 import Clock from "@/components/Clock";
@@ -131,6 +131,69 @@ const Monitor = () => {
           </div>
           <div className="monitor-card-content-item">
             <RippleCountdown seconds={countdown} onEnd={handleCountdownEnd} />
+          </div>
+        </div>
+      </Card>
+
+      {/* 用户满意度 */}
+      <Card className="monitor-card" title="用户满意度">
+        <div className="monitor-card-content">
+          <div className="comment-item">
+            <span className="comment-item-number">907</span>
+            <div className="icon-container">
+              <span className="icon-container-icon">
+                <svg
+                  t="1745585303688"
+                  viewBox="0 0 1024 1024"
+                  version="1.1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  p-id="2915"
+                  width="70"
+                  height="70"
+                >
+                  <path
+                    d="M512 64C265.6 64 64 265.6 64 512s201.6 448 448 448 448-201.6 448-448S758.4 64 512 64z m-144 256c25.6 0 48 22.4 48 48s-22.4 48-48 48-48-22.4-48-48 22.4-48 48-48z m329.6 339.2c-3.2 3.2-60.8 76.8-185.6 76.8s-182.4-73.6-185.6-76.8c-9.6-12.8-6.4-35.2 6.4-44.8 12.8-9.6 35.2-6.4 44.8 6.4 0 3.2 41.6 51.2 134.4 51.2s134.4-48 134.4-51.2c9.6-12.8 32-16 44.8-6.4 12.8 12.8 16 32 6.4 44.8zM656 416c-25.6 0-48-22.4-48-48s22.4-48 48-48 48 22.4 48 48-22.4 48-48 48z"
+                    p-id="2916"
+                    fill="#f4ea2a"
+                  ></path>
+                </svg>
+              </span>
+              <span className="monitor-card-title">正面评论</span>
+            </div>
+            <span className="comment-item-number percentage-good">83%</span>
+          </div>
+          <div className="comment-item">
+            <span className="comment-item-number">156</span>
+            <div className="icon-container">
+              <span className="icon-container-icon">
+                <div style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "70px",
+                    width: "70px",
+                  }}
+                >
+                  <svg
+                    t="1745585853048"
+                    viewBox="0 0 1024 1024"
+                    version="1.1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    p-id="5225"
+                    width="60"
+                    height="60"
+                  >
+                    <path
+                      d="M512 1024A512 512 0 1 1 512 0a512 512 0 0 1 0 1024zM332.8 460.8a76.8 76.8 0 1 0 0-153.6 76.8 76.8 0 0 0 0 153.6z m358.4 0a76.8 76.8 0 1 0 0-153.6 76.8 76.8 0 0 0 0 153.6z m39.936 297.574A391.475 391.475 0 0 0 511.181 691.2c-78.746 0-154.112 23.245-218.112 66.048a25.6 25.6 0 0 0 28.365 42.598A340.275 340.275 0 0 1 511.18 742.4c69.222 0 135.168 20.48 191.283 58.368a25.6 25.6 0 1 0 28.672-42.394z"
+                      p-id="5226"
+                      fill="#f4ea2a"
+                    ></path>
+                  </svg>
+                </div>
+              </span>
+              <span className="monitor-card-title">负面评论</span>
+            </div>
+            <span className="comment-item-number percentage-bad">17%</span>
           </div>
         </div>
       </Card>

@@ -1,45 +1,77 @@
 .monitor-container {
-    .ant-card {
-        margin-bottom: 20px;
+  .ant-card {
+    margin-bottom: 20px;
+  }
+  .monitor-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    .monitor-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      i {
+        width: 20px;
+        height: 20px;
+      }
     }
+
     .monitor-card-content {
+      font-size: 24px;
+      font-weight: 600;
+      color: #2c2c2c;
+    }
+
+    .monitor-card-title {
+      font-size: 14px;
+      color: #999;
+    }
+
+    .time {
+      font-size: 15px;
+      color: #979595;
+    }
+
+    .animated-number {
+      font-size: 60px;
+      font-weight: 600;
+      color: #2c2c2c;
+    }
+    .comment-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      .comment-item-number {
+        font-size: 24px;
+        font-weight: 600;
+        color: #2c2c2c;
+      }
+      .comment-item-percentage {
+        font-size: 14px;
+        color: #999;
+      }
+      .icon-container {
         display: flex;
+        width: 100px;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        .monitor-card-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            i {
-                width: 20px;
-                height: 20px;
-            }
+        .icon-container-icon {
+          width: 70px;
+          height: 70px;
         }
-
-        .monitor-card-content {
-            font-size: 24px;
-            font-weight: 600;
-            color: #2c2c2c;
-        }
-
-        .monitor-card-title {
-            font-size: 14px;
-            color: #999;
-        }
-
-        .time {
-            font-size: 15px;
-            color: #979595;
-        }
-
-        .animated-number {
-            font-size: 60px;
-            font-weight: 600;
-            color: #2c2c2c;
-        }
+      }
+      .percentage-good {
+        color: #00a88b;
+      }
+      .percentage-bad {
+        color: #ff4d4f;
+      }
     }
+  }
 }
