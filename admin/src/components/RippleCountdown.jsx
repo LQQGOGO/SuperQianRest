@@ -4,9 +4,13 @@ import "./RippleCountdown.scss";
 const RippleCountdown = ({ seconds = 10, onEnd }) => {
   const [countdown, setCountdown] = useState(seconds);
 
+  // 倒计时
   useEffect(() => {
     if (countdown === 0) {
+      // 倒计时结束
       onEnd && onEnd();
+      // 重置倒计时
+      setCountdown(seconds);
       return;
     }
     const timer = setTimeout(() => {

@@ -1,5 +1,5 @@
 import { Card } from "antd";
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import "./Monitor.scss";
 import ChinaMap from "@/components/ChinaMap";
 import Clock from "@/components/Clock";
@@ -7,13 +7,16 @@ import AnimatedNumber from "@/components/AnimatedNumber";
 import RippleCountdown from "@/components/RippleCountdown";
 
 const Monitor = () => {
-  const [from, setFrom] = useState(0);
-  const [to, setTo] = useState(1000);
+  const [from, setFrom] = useState(684);
+  const [to, setTo] = useState(1742);
+  const [countdown, setCountdown] = useState(10);
 
-  useEffect(() => {
-    setFrom(1000);
-    setTo(170);
-  }, []);
+  const handleCountdownEnd = () => {
+    const newTo = to + 1121;
+    setFrom(to); // 当前数字作为起点
+    setTo(newTo); // 设置新目标值
+    setCountdown(10); // 重新开始倒计时
+  };
 
   return (
     <div className="monitor-container">
@@ -121,15 +124,13 @@ const Monitor = () => {
             <Clock />
           </div>
           <div className="monitor-card-content-item animated-number">
-            <AnimatedNumber from={1000} to={170} duration={4000} />
+            <AnimatedNumber from={from} to={to} duration={2000} />
           </div>
           <div className="monitor-card-content-item">
             <span className="monitor-card-title">当前在线人数</span>
           </div>
           <div className="monitor-card-content-item">
-            <RippleCountdown seconds={9} onEnd={() => {
-              console.log("end");
-            }} />
+            <RippleCountdown seconds={countdown} onEnd={handleCountdownEnd} />
           </div>
         </div>
       </Card>
@@ -137,4 +138,4 @@ const Monitor = () => {
   );
 };
 
-export default Monitor; 
+export default Monitor;
