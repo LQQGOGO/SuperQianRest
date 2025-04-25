@@ -1,30 +1,40 @@
 import React, { useState, useEffect } from "react";
 
-const Clock = () => {
-  const [time, setTime] = useState(getCurrentTime());
+/* 时间格式化工具 */
+const formatTime = (date, format = "YYYY-MM-DD HH:mm:ss") => {
+  const pad = (n) => String(n).padStart(2, "0");
+  const map = {
+    YYYY: date.getFullYear(),
+    MM: pad(date.getMonth() + 1),
+    DD: pad(date.getDate()),
+    HH: pad(date.getHours()),
+    mm: pad(date.getMinutes()),
+    ss: pad(date.getSeconds()),
+  };
+
+  return format.replace(/YYYY|MM|DD|HH|mm|ss/g, (match) => map[match]);
+};
+
+const Clock = ({
+  format = "YYYY-MM-DD HH:mm:ss",
+  interval = 1000,
+  className = "",
+  style = {},
+}) => {
+  const [time, setTime] = useState(formatTime(new Date(), format));
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTime(getCurrentTime());
-    }, 1000); // 每秒更新一次
+      setTime(formatTime(new Date(), format));
+    }, interval);
 
-    return () => clearInterval(timer); // 组件卸载时清除定时器
-  }, []);
-
-  function getCurrentTime() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-    const hour = String(now.getHours()).padStart(2, "0");
-    const minute = String(now.getMinutes()).padStart(2, "0");
-    const second = String(now.getSeconds()).padStart(2, "0");
-
-    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-  }
+    return () => clearInterval(timer);
+  }, [format, interval]);
 
   return (
-    <div>{time}</div>
+    <div className={className} style={style}>
+      {time}
+    </div>
   );
 };
 

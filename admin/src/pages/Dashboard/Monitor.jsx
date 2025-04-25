@@ -121,7 +121,7 @@ const Monitor = () => {
       <Card className="monitor-card" title="在线人数">
         <div className="monitor-card-content">
           <div className="monitor-card-content-item time">
-            <Clock />
+            <Clock format="HH:mm:ss" />
           </div>
           <div className="monitor-card-content-item animated-number">
             <AnimatedNumber from={from} to={to} duration={2000} />
