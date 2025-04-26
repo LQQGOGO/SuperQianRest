@@ -164,29 +164,52 @@ const menuList = [
   },
 ];
 
-// 用户下拉菜单
-const UserDropdownItems = [
-  {
-    key: "1",
-    label: "个人中心",
-    icon: <EditOutlined />,
-  },
-  {
-    key: "2",
-    label: "退出登录",
-    icon: <LogoutOutlined />,
-  },
-  {
-    key: "3",
-    label: "切换主题",
-    icon: <BulbOutlined />,
-  },
-];
-
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(true);
   const location = useLocation();
   const [newOrder, setNewOrder] = useState([]);
+  const [themeMode, setThemeMode] = useState(
+    localStorage.getItem("theme") || "light"
+  );
+
+  // 初始化主题
+  useEffect(() => {
+    document.body.className = themeMode;
+  }, []);
+
+  // 处理用户菜单点击
+  const handleUserMenuClick = ({ key }) => {
+    if (key === "1") {
+      navigate("/personal/profile");
+    } else if (key === "2") {
+      localStorage.removeItem("6627");
+      navigate("/login");
+    } else if (key === "3") {
+      const newTheme = themeMode === "light" ? "dark" : "light";
+      setThemeMode(newTheme);
+      document.body.className = newTheme;
+      localStorage.setItem("theme", newTheme);
+    }
+  };
+
+  // 用户下拉菜单
+  const UserDropdownItems = [
+    {
+      key: "1",
+      label: "个人中心",
+      icon: <EditOutlined />,
+    },
+    {
+      key: "2",
+      label: "退出登录",
+      icon: <LogoutOutlined />,
+    },
+    {
+      key: "3",
+      label: themeMode === "light" ? "切换黑夜模式" : "切换白天模式",
+      icon: <BulbOutlined />,
+    },
+  ];
 
   // 消息通知下拉菜单
   const MessageDropdownItems = [
@@ -400,6 +423,7 @@ const AdminLayout = () => {
             <Dropdown
               menu={{
                 items: UserDropdownItems,
+                onClick: handleUserMenuClick,
               }}
               placement="bottomLeft"
             >
