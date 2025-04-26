@@ -38,9 +38,11 @@ import {
   Space,
   Tabs,
   Avatar,
+  Badge,
 } from "antd";
 import "./index.scss";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { getOrderList } from "@/apis/order";
 
 const { Header, Sider, Content } = Layout;
 
@@ -124,11 +126,11 @@ const menuList = [
         icon: <BarChartOutlined />,
         label: "销售数据",
       },
-      {
-        key: "/report/user-analysis",
-        icon: <ControlOutlined />,
-        label: "用户分析",
-      },
+      // {
+      //   key: "/report/user-analysis",
+      //   icon: <ControlOutlined />,
+      //   label: "用户分析",
+      // },
     ],
   },
   {
@@ -141,11 +143,11 @@ const menuList = [
         icon: <IdcardOutlined />,
         label: "我的资料",
       },
-      {
-        key: "/personal/messages",
-        icon: <BellOutlined />,
-        label: "消息通知",
-      },
+      // {
+      //   key: "/personal/messages",
+      //   icon: <BellOutlined />,
+      //   label: "消息通知",
+      // },
     ],
   },
   {
@@ -159,22 +161,6 @@ const menuList = [
         label: "基本信息",
       },
     ],
-  },
-];
-
-// 消息通知下拉菜单
-const MessageDropdownItems = [
-  {
-    key: "1",
-    label: "通知（0）",
-  },
-  {
-    key: "2",
-    label: "消息（0）",
-  },
-  {
-    key: "3",
-    label: "代办（0）",
   },
 ];
 
@@ -200,6 +186,24 @@ const UserDropdownItems = [
 const AdminLayout = () => {
   const [collapsed, setCollapsed] = useState(true);
   const location = useLocation();
+  const [newOrder, setNewOrder] = useState([]);
+
+  // 消息通知下拉菜单
+  const MessageDropdownItems = [
+    {
+      key: "1",
+      label: (
+        <Badge dot={newOrder.length > 0}>
+          <a
+            onClick={() => navigate("/order/order-list")}
+            style={{ color: "black", cursor: "pointer" }}
+          >
+            订单
+          </a>
+        </Badge>
+      ),
+    },
+  ];
 
   // 从 localStorage 读取数据
   const storedTabs = JSON.parse(sessionStorage.getItem("tabs")) || [
@@ -304,6 +308,16 @@ const AdminLayout = () => {
     remove(targetKey);
   };
 
+  // 获取新订单
+  const getNewOrder = async () => {
+    const res = await getOrderList({ status: "pending" });
+    setNewOrder(res.items);
+  };
+
+  useEffect(() => {
+    getNewOrder();
+  }, []);
+
   return (
     <Layout className="admin-layout">
       {/* 侧边栏导航栏 */}
@@ -359,6 +373,7 @@ const AdminLayout = () => {
                 width: 40,
                 height: 40,
               }}
+              onClick={() => window.location.reload()}
             />
           </div>
           {/* 用户信息 */}

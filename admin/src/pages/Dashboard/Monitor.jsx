@@ -20,6 +20,24 @@ const Monitor = () => {
 
   return (
     <div className="monitor-container">
+      {/* 在线人数 */}
+      <Card className="monitor-card" title="在线人数">
+        <div className="monitor-card-content">
+          <div className="monitor-card-content-item time">
+            <Clock format="HH:mm:ss" />
+          </div>
+          <div className="monitor-card-content-item animated-number">
+            <AnimatedNumber from={from} to={to} duration={2000} />
+          </div>
+          <div className="monitor-card-content-item">
+            <span className="monitor-card-title">当前在线人数</span>
+          </div>
+          <div className="monitor-card-content-item">
+            <RippleCountdown seconds={countdown} onEnd={handleCountdownEnd} />
+          </div>
+        </div>
+      </Card>
+      
       {/* 总访问人数 */}
       <Card className="monitor-card">
         <div className="monitor-card-content">
@@ -117,24 +135,6 @@ const Monitor = () => {
         </div>
       </Card>
 
-      {/* 在线人数 */}
-      <Card className="monitor-card" title="在线人数">
-        <div className="monitor-card-content">
-          <div className="monitor-card-content-item time">
-            <Clock format="HH:mm:ss" />
-          </div>
-          <div className="monitor-card-content-item animated-number">
-            <AnimatedNumber from={from} to={to} duration={2000} />
-          </div>
-          <div className="monitor-card-content-item">
-            <span className="monitor-card-title">当前在线人数</span>
-          </div>
-          <div className="monitor-card-content-item">
-            <RippleCountdown seconds={countdown} onEnd={handleCountdownEnd} />
-          </div>
-        </div>
-      </Card>
-
       {/* 用户满意度 */}
       <Card className="monitor-card" title="用户满意度">
         <div className="monitor-card-content">
@@ -166,7 +166,8 @@ const Monitor = () => {
             <span className="comment-item-number">156</span>
             <div className="icon-container">
               <span className="icon-container-icon">
-                <div style={{
+                <div
+                  style={{
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
