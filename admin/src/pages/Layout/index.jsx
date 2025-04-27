@@ -165,7 +165,8 @@ const menuList = [
 ];
 
 const AdminLayout = () => {
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 1200);
   const location = useLocation();
   const [newOrder, setNewOrder] = useState([]);
   const [themeMode, setThemeMode] = useState(
@@ -175,6 +176,20 @@ const AdminLayout = () => {
   // 初始化主题
   useEffect(() => {
     document.body.className = themeMode;
+  }, []);
+
+  // 监听窗口大小变化
+  useEffect(() => {
+    const handleResize = () => {
+      const small = window.innerWidth < 1200;
+      setIsSmallScreen(small);
+      // 在小屏幕时默认收起，大屏幕时默认展开
+      setCollapsed(small);
+    };
+
+    handleResize(); // 初始化
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   // 处理用户菜单点击
@@ -346,8 +361,8 @@ const AdminLayout = () => {
       {/* 侧边栏导航栏 */}
       <Sider
         className="admin-layout-sider"
-        // collapsedWidth={0}
-        // width={200}
+        collapsedWidth={isSmallScreen ? 0 : 80}
+        width={200}
         trigger={null}
         collapsible
         collapsed={collapsed}
@@ -385,10 +400,7 @@ const AdminLayout = () => {
             <Button
               type="text"
               icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              onClick={() => {
-                setCollapsed(!collapsed);
-                // document.body.style.overflow = "hidden";
-              }}
+              onClick={() => setCollapsed(!collapsed)}
               style={{
                 fontSize: "16px",
                 width: 40,
@@ -462,7 +474,7 @@ const AdminLayout = () => {
         />
 
         <Content
-          className="admin-layout-content"
+          className="admin-layout-content-content"
           style={{
             padding: 20,
             minHeight: 280,
