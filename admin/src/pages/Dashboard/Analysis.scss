@@ -1,0 +1,14 @@
+.sales-data {
+    .ant-card {
+        margin: 20px;
+    }
+  @media (min-width: 1200px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    .ant-card {
+        max-width: 800px;
+    }
+    
+  }
+}

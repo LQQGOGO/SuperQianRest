@@ -5,6 +5,7 @@ import WordCloud from "@/components/WordCloud";
 import LineChart from "@/components/LineChart";
 import BarChart from "@/components/BarChart";
 import dayjs from "dayjs";
+import "./Analysis.scss";
 
 const Analysis = () => {
   const [salesData, setSalesData] = useState({});
