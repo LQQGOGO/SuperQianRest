@@ -346,8 +346,8 @@ const AdminLayout = () => {
       {/* 侧边栏导航栏 */}
       <Sider
         className="admin-layout-sider"
-        collapsedWidth={0}
-        width={200}
+        // collapsedWidth={0}
+        // width={200}
         trigger={null}
         collapsible
         collapsed={collapsed}
@@ -366,7 +366,13 @@ const AdminLayout = () => {
       <Layout className="admin-layout-content">
         {/* 遮罩层 */}
         {!collapsed && (
-          <div className="layout-mask" onClick={() => setCollapsed(true)} />
+          <div
+            className="layout-mask"
+            onClick={() => {
+              setCollapsed(true);
+              // document.body.style.overflow = "auto";
+            }}
+          />
         )}
 
         {/* 头部 */}
@@ -379,7 +385,10 @@ const AdminLayout = () => {
             <Button
               type="text"
               icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-              onClick={() => setCollapsed(!collapsed)}
+              onClick={() => {
+                setCollapsed(!collapsed);
+                // document.body.style.overflow = "hidden";
+              }}
               style={{
                 fontSize: "16px",
                 width: 40,

@@ -1,13 +1,14 @@
 .ant-layout {
-  height: 100%;
+  height: 100vh;
+  overflow: hidden;
 
-  .admin-layout-sider {
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100%;
-    z-index: 1000;
-  }
+  // .admin-layout-sider {
+  //   position: fixed;
+  //   left: 0;
+  //   top: 0;
+  //   height: 100%;
+  //   z-index: 1000;
+  // }
 
   .admin-layout-menu .ant-menu-item {
     font-size: 15px;
@@ -16,6 +17,9 @@
 
   .admin-layout-content {
     position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 
     .layout-mask {
       position: absolute;
@@ -66,12 +70,16 @@
 
 .admin-layout-tabs {
   width: 100%;
-  height: 50px;
+  height: 60px;
   padding: 20px;
+  background-color: #fff;
+  border-top: 1px solid #f0f2f5;
 }
 
-.admin-layout-tabs {
-  height: 59px;
-  border-top: 1px solid #f0f2f5;
-  background-color: #fff;
+// 内容区域样式
+.ant-layout-content {
+  flex: 1;
+  overflow-y: auto; // 允许内容区域独立滚动
+  padding: 20px;
+  background: #f0f2f5;
 }
