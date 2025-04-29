@@ -14,7 +14,7 @@
     @media (max-width: 1199px) {
       // 如果侧边栏收起，则往左偏移隐藏侧边栏
       &.ant-layout-sider-collapsed {
-        left: -200px;
+        left: -300px;
       }
     }
 
@@ -43,7 +43,7 @@
 
     // 大屏幕样式
     @media (min-width: 1200px) {
-      margin-left: 200px;
+      margin-left: 300px;
     }
 
     .layout-mask {

@@ -2,6 +2,17 @@
   .ant-card {
     margin-bottom: 20px;
   }
+
+  @media (min-width: 1200px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    .ant-card {
+        max-width: 800px;
+        margin: 20px;
+    }
+    
+  }
   .monitor-card-content {
     display: flex;
     flex-direction: column;

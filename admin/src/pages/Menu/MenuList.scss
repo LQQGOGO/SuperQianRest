@@ -2,4 +2,10 @@
   .ant-list-item {
     height: 120px;
   }
+
+  @media (min-width: 1200px) {
+    .ant-list-item {
+      height:150px
+    }
+  }
 }

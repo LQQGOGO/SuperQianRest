@@ -356,13 +356,26 @@ const AdminLayout = () => {
     getNewOrder();
   }, []);
 
+  // 退出登录时清除 localStorage 中的 token
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      // 清除 localStorage 中的 token
+      localStorage.removeItem("6627");
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    // 卸载时移除监听器，避免内存泄漏
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
   return (
     <Layout className="admin-layout">
       {/* 侧边栏导航栏 */}
       <Sider
         className="admin-layout-sider"
         collapsedWidth={isSmallScreen ? 0 : 80}
-        width={200}
+        width={300}
         trigger={null}
         collapsible
         collapsed={collapsed}
