@@ -28,7 +28,6 @@ import {
   LogoutOutlined,
   BulbOutlined,
 } from "@ant-design/icons";
-import avatar from "@/assets/logo.png";
 import {
   Button,
   Layout,
@@ -43,6 +42,8 @@ import {
 import "./index.scss";
 import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { getOrderList } from "@/apis/order";
+import { getPersonalProfile } from "@/apis/personal";
+
 
 const { Header, Sider, Content } = Layout;
 
@@ -172,6 +173,17 @@ const AdminLayout = () => {
   const [themeMode, setThemeMode] = useState(
     localStorage.getItem("theme") || "light"
   );
+  const [avatar, setAvatar] = useState("");
+
+  // 获取用户信息数据
+  const getUserInfo = async () => {
+    const res = await getPersonalProfile();
+    setAvatar(res.avatar);
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
 
   // 初始化主题
   useEffect(() => {

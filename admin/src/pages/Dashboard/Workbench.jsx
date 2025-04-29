@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom";
 import { Card, Avatar, Space, Col, Row, Timeline } from "antd";
-import avatar from "@/assets/logo.png";
 import Icon from "@ant-design/icons";
 import RainOutlineSvg from "@/assets/Icons/RainOutline.svg?react";
 import ProjectMapSvg from "@/assets/Icons/ProjectMap.svg?react";
@@ -15,15 +14,29 @@ import {
   InboxOutlined,
 } from "@ant-design/icons";
 import "./Workbench.scss";
+import { getPersonalProfile } from "@/apis/personal";
+import { useEffect, useState } from "react";
+
 
 const Workbench = () => {
   const navigate = useNavigate();
+  const [avatar, setAvatar] = useState("");
 
   // 简化后的 handleCardClick 函数，只负责路由跳转
   const handleCardClick = (key) => {
     navigate(key);
   };
 
+  // 获取用户信息数据
+  const getUserInfo = async () => {
+    const res = await getPersonalProfile();
+    setAvatar(res.avatar);
+    console.log(res);
+  };
+
+  useEffect(() => {
+    getUserInfo();
+  }, []);
   return (
     <div className="workbench-container">
       {/* 工作台顶部用户信息 */}
@@ -188,7 +201,7 @@ const Workbench = () => {
       </div>
 
       {/* 最新动态 */}
-      <Card title="最新动态" className="timeline">
+      {/* <Card title="最新动态" className="timeline">
         <Timeline
           items={[
             {
@@ -201,7 +214,7 @@ const Workbench = () => {
             },
           ]}
         ></Timeline>
-      </Card>
+      </Card> */}
     </div>
   );
 };
