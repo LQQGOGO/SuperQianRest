@@ -10,6 +10,7 @@ const RippleCountdown = ({ seconds = 10, onEnd }) => {
       // 倒计时结束
       onEnd && onEnd();
       // 重置倒计时
+      //  console.log("zi");
       setCountdown(seconds);
       return;
     }

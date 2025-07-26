@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+//加载环境变量
 require('dotenv').config();
 
 // 导入路由
@@ -14,38 +15,40 @@ const personalRoutes = require('./routes/personalRoutes');
 const settingRoutes = require('./routes/settingRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 
-// 导入中间件
+// 导入错误处理中间件
 const errorHandler = require('./middleware/errorHandler');
 
-// 在现有导入之后添加
-const initDatabase = require('./utils/initDb');
+// 初始化数据库
+// const initDatabase = require('./utils/initDb');
 
 const app = express();
 const PORT = process.env.PORT || 3050;
 
-// 中间件
+// 配置cors解决跨域
 app.use(cors({
   origin: '*', // 允许所有来源
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+//解析请求体
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// 静态文件
+// 暴露静态资源目录
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // 在所有路由之前添加
+// 显示api调用信息
 app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} [${req.method}] ${req.url}`);
   next();
 });
 
-// API 路由
-app.get('/api/test', (req, res) => {
-  console.log('收到测试请求');
-  res.json({ message: '服务器正常运行' });
-});
+// app.get('/api/test', (req, res) => {
+//   console.log('收到测试请求');
+//   res.json({ message: '服务器正常运行' });
+// });
 
 app.use('/api/auth', authRoutes);
 app.use('/api/menu', menuRoutes);
@@ -62,9 +65,9 @@ app.use(errorHandler);
 
 // 在启动服务器之前添加
 // 初始化数据库
-initDatabase().catch((err) => {
-  console.error('数据库初始化失败:', err);
-});
+// initDatabase().catch((err) => {
+//   console.error('数据库初始化失败:', err);
+// });
 
 // 启动服务器
 app.listen(PORT, () => {

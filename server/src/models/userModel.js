@@ -2,6 +2,7 @@ const db = require('../config/db');
 const bcrypt = require('bcryptjs');
 
 class User {
+  // 通过用户名查找用户
   static async findByUsername(username) {
     try {
       const [rows] = await db.query(
@@ -14,6 +15,7 @@ class User {
     }
   }
   
+  // 通过ID查找用户
   static async findById(id) {
     try {
       console.log('查询用户ID:', id);
@@ -40,6 +42,7 @@ class User {
         params.push(options.role);
       }
       
+      // 实现模糊搜索
       if (options.search) {
         query += ' AND (username LIKE ? OR name LIKE ? OR phone LIKE ? OR email LIKE ?)';
         const searchTerm = `%${options.search}%`;

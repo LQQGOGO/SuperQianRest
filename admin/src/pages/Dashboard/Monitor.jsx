@@ -16,6 +16,7 @@ const Monitor = () => {
     setFrom(to); // 当前数字作为起点
     setTo(newTo); // 设置新目标值
     setCountdown(10); // 重新开始倒计时
+    // console.log('fu');
   };
 
   return (

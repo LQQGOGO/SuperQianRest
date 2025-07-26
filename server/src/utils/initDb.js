@@ -73,7 +73,7 @@ const initDatabase = async () => {
   }
 };
 
-// 如果直接运行此脚本，则执行初始化
+//执行初始化
 if (require.main === module) {
   initDatabase()
     .then(() => {
